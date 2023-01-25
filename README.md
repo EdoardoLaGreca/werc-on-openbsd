@@ -2,6 +2,8 @@
 
 Automate [Werc](http://werc.cat-v.org/) setup on [OpenBSD](https://www.openbsd.org/).
 
+The `setup.sh` script has been successfully tested on OpenBSD 7.2. Prior or later version of OpenBSD may not work.
+
 ## How-To
 
  1. download the setup script (`setup.sh`)
