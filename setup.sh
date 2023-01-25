@@ -93,10 +93,9 @@ mkdir -p "${webdir}/dev"
 mknod -m 666 "${webdir}/dev/null" c 2 2 # "2 2" is OS-dependent
 
 # copy required things into the chroot environment
-# TODO: optimize copies of /usr/local/plan9: only copy what is needed
-mkdir -p ${webdir}/usr/local ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin
-cp -r /usr/local/plan9 ${webdir}/usr/local
-mv ${webdir}/usr/local/plan9/bin/* ${webdir}/bin
+mkdir -p ${webdir}/usr/local/plan9 ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin
+cp /usr/local/plan9/rcmain ${webdir}/usr/local/plan9
+cp /usr/local/plan9/bin/* ${webdir}/bin
 cp /usr/libexec/ld.so ${webdir}/usr/libexec
 cp /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
 cp /bin/{sh,pwd} ${webdir}/bin
