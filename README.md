@@ -15,7 +15,8 @@ The `setup.sh` script has been successfully tested on OpenBSD 7.2. Prior or late
     sha256 -q setup.sh
     ```
  3. (optional) if you're a paranoid, you may want to check the script content before running it
- 4. start the script as root
+ 4. change the `domain` variable (and `webdir`, if necessary) in `setup.sh`
+ 5. start the script as root
     ```sh
     doas ./setup.sh
     ```
