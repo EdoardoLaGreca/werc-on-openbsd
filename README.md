@@ -25,4 +25,4 @@ The `setup.sh` script has been successfully tested on OpenBSD 7.2. Prior or late
 
 ### `setup.sh`
 
-SHA-256: `38ea5ce4ee6cf74aad983dc6955d5dc0dca45306897817b5aee93d630ffe7734`
+SHA-256: `53950aa8076e52a5b3cbed754cfa9c1e0fb97e46c4f79d2511d6c51c4e8aeb9b`
