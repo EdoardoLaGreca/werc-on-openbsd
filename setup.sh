@@ -97,7 +97,7 @@ types {
 " >/etc/httpd.conf
 
 # if $webdir is (or is inside of) an entry in /etc/fstab that is marked as "nodev"
-if [ check_fstab "${webdir}" ]
+if [ ( check_fstab "${webdir}" ) ]
 then
 	# remove "nodev" from /var in /etc/fstab so that we can create /dev/null
 	# this requires a reboot to be effective
