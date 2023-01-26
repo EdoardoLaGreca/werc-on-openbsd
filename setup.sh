@@ -78,22 +78,32 @@ printf "# congratulations\n\nit works! :)\n" >${siteroot}/index.md
 # write new httpd.conf
 # for some reason, httpd waits until timeout ("connection request timeout") for some files
 echo \
-"server \"${domain}\" {
+'server "'${domain}'" {
 	listen on * port 80
-	connection request timeout 1
+	#connection request timeout 4
 
-	root \"/\"
-	fastcgi {
-		param DOCUMENT_ROOT \"/werc/bin\"
-		param SCRIPT_FILENAME \"/werc/bin/werc.rc\"
-		socket \"/run/slowcgi.sock\"
+	location "/pub/*" {
+		root "/werc"
+	}
+
+	location found "/*" {
+		root "/werc/sites/'${domain}'"
+	}
+
+	location not found "/*" {
+		root "/"
+		fastcgi {
+			param DOCUMENT_ROOT "/werc/bin"
+			param SCRIPT_FILENAME "/werc/bin/werc.rc"
+			socket "/run/slowcgi.sock"
+		}
 	}
 }
 
 types {
-	include \"/usr/share/misc/mime.types\"
+	include "/usr/share/misc/mime.types"
 }
-" >/etc/httpd.conf
+' >/etc/httpd.conf
 
 # if $webdir is (or is inside of) an entry in /etc/fstab that is marked as "nodev"
 if [ ( check_fstab "${webdir}" ) ]
