@@ -62,6 +62,7 @@ pkg_add bzip2 plan9port
 # download werc into the environment and set it up
 ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2
 tar xjf tip.tar.bz2 -C ${webdir}
+rm tip.tar.bz2
 mv ${webdir}/werc-* ${webdir}/werc
 siteroot="${webdir}/werc/sites/${domain}"
 mkdir ${siteroot}
