@@ -37,6 +37,26 @@ domain=${domain:-"example.com"}
 }
 [ "${webdir}" = "/" ] && echo "$0: careful, webdir is root" >&2
 
+# ----   functions   ----
+
+# check if directory is in (or is child of a directory in) fstab and it is marked as "nodev"
+check_fstab() {
+	dir="$1"
+
+	# get directories with "nodev"
+	fstab_dirs="$(egrep ',?nodev,?' /etc/fstab | cut -d ' ' -f 2)"
+
+	# check for each $fstab_dir if it is a parent directory of $dir
+	for fstab_dir in ${fstab_dirs}
+	do
+		[ echo "${dir}" | egrep "^${fstab_dir}/?" ] return 0
+	done
+
+	return 1
+}
+
+# ---- end functions ----
+
 pkg_add bzip2 plan9port
 
 # download werc into the environment and set it up
@@ -74,8 +94,8 @@ types {
 }
 " >/etc/httpd.conf
 
-# if $webdir is "/var" or "/var/..."
-if [ $(echo "${webdir}" | egrep '^/var(/.+)?') = "${webdir}" ]
+# if $webdir is (or is inside of) an entry in /etc/fstab that is marked as "nodev"
+if [ check_fstab "${webdir}" ]
 then
 	# remove "nodev" from /var in /etc/fstab so that we can create /dev/null
 	# this requires a reboot to be effective
@@ -83,9 +103,7 @@ then
 	newline=$(echo "${oldline}" | sed 's/nodev//' | sed 's/,,/,/')
 	oldfile=$(cat /etc/fstab)
 	echo "${oldfile}" | sed "s#${oldline}#${newline}#" >/etc/fstab # this assumes that the line doesn't have a comment after (who puts comments at the end of fstab lines anyway?)
-	echo "$0: a reboot is required at the end of the setup process" >&2
-else
-	echo "$0: you may have to change /etc/fstab in order to create the /dev/null device; if you do change /etc/fstab, the system requires a reboot at the end of the setup process" >&2
+	echo "$0: /etc/fstab changed, a reboot is required at the end of the setup process" >&2
 fi
 
 # create /dev/null in $webdir
@@ -108,4 +126,3 @@ echo "$0: setup completed!" >&2
 echo "$0: check prior messages to see if you need to reboot; otherwise, you can start the httpd and slowcgi services" >&2
 
 exit 0
-
