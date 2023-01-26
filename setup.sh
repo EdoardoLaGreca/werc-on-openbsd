@@ -49,7 +49,7 @@ check_fstab() {
 	# check for each $fstab_dir if it is a parent directory of $dir
 	for fstab_dir in ${fstab_dirs}
 	do
-		[ echo "${dir}" | egrep "^${fstab_dir}/?" ] return 0
+		[ "$(echo "${dir}" | egrep "^${fstab_dir}/?")" ] return 0
 	done
 
 	return 1
