@@ -80,7 +80,6 @@ printf "# congratulations\n\nit works! :)\n" >${siteroot}/index.md
 echo \
 "server \"${domain}\" {
 	listen on * port 80
-	#listen on * tls port 443
 	connection request timeout 1
 
 	root \"/\"
