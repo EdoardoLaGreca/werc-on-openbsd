@@ -76,11 +76,12 @@ printf "# congratulations\n\nit works! :)\n" >${siteroot}/index.md
 }
 
 # write new httpd.conf
+# for some reason, httpd waits until timeout ("connection request timeout") for some files
 echo \
 "server \"${domain}\" {
 	listen on * port 80
 	#listen on * tls port 443
-	connection request timeout 5
+	connection request timeout 1
 
 	root \"/\"
 	fastcgi {
