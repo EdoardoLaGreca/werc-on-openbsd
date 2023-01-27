@@ -130,7 +130,7 @@ cp /usr/local/plan9/rcmain ${webdir}/usr/local/plan9
 cp /usr/local/plan9/bin/* ${webdir}/bin
 cp /usr/libexec/ld.so ${webdir}/usr/libexec
 cp /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
-cp /bin/{sh,pwd} ${webdir}/bin
+cp /bin/{pwd,mv} ${webdir}/bin
 
 # enable slowcgi and httpd
 rcctl enable slowcgi
