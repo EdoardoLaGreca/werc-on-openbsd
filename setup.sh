@@ -128,13 +128,13 @@ mkdir -p "${webdir}/dev"
 mknod -m 666 "${webdir}/dev/null" c 2 2 # "2 2" is OS-dependent
 
 # copy required things into the chroot environment
-mkdir -p ${webdir}/usr/local/plan9 ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin
+mkdir -p ${webdir}/usr/local/plan9 ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin ${webdir}/lib
 cp /usr/local/plan9/rcmain ${webdir}/usr/local/plan9
 cp /usr/local/plan9/bin/* ${webdir}/bin
 cp /usr/libexec/ld.so ${webdir}/usr/libexec
 cp /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
 cp /bin/{pwd,mv} ${webdir}/bin
-cp /usr/local/plan9/lib/fortunes /var/www/lib
+cp /usr/local/plan9/lib/fortunes ${webdir}/lib
 
 # make root symlink to emulate /usr/local/plan9
 # some programs, during execution, get the value of the PLAN9 environment variable. that variable cannot
