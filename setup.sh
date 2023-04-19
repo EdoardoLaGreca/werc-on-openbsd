@@ -128,23 +128,13 @@ mkdir -p "${webdir}/dev"
 mknod -m 666 "${webdir}/dev/null" c 2 2 # "2 2" is OS-dependent
 
 # copy required things into the chroot environment
-mkdir -p ${webdir}/usr/local/plan9 ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin ${webdir}/lib
+mkdir -p ${webdir}/usr/local/plan9 ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin ${webdir}/usr/local/plan9/lib
 cp /usr/local/plan9/rcmain ${webdir}/usr/local/plan9
 cp /usr/local/plan9/bin/* ${webdir}/bin
 cp /usr/libexec/ld.so ${webdir}/usr/libexec
 cp /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
 cp /bin/{pwd,mv} ${webdir}/bin
-cp /usr/local/plan9/lib/fortunes ${webdir}/lib
-
-# make root symlink to emulate /usr/local/plan9
-# some programs, during execution, get the value of the PLAN9 environment variable. that variable cannot
-# be set at each invocation of rc, because rc doesn't have an rc file like bash (.bashrc) and cannot be
-# executed like `PLAN9="/" rc' (the way CGI executes scripts doesn't allow that). the only other solution
-# I can think of would be to edit the werc/bin/werc.rc script to export PLAN9, but it would need to be done
-# after each werc update and the update-independent way to achieve that in this script would be difficult.
-# this is the simplest way to solve the problem (and probably the most elegant)
-mkdir -p ${webdir}/usr/local
-ln -s ${webdir}/ ${webdir}/usr/local/plan9
+cp /usr/local/plan9/lib/fortunes ${webdir}/usr/local/plan9/lib
 
 # enable slowcgi and httpd
 rcctl enable slowcgi
