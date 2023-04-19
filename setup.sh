@@ -79,8 +79,11 @@ printf "# congratulations\n\nit works! :)\n" >${siteroot}/index.md
 # for some reason, httpd waits until timeout ("connection request timeout") for some files
 echo \
 'server "'${domain}'" {
+
+	# see https://man.openbsd.org/httpd.conf to enable ssl/tls
+
 	listen on * port 80
-	#connection request timeout 4
+	connection request timeout 4
 
 	location "/pub/*" {
 		root "/werc"
@@ -131,6 +134,17 @@ cp /usr/local/plan9/bin/* ${webdir}/bin
 cp /usr/libexec/ld.so ${webdir}/usr/libexec
 cp /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
 cp /bin/{pwd,mv} ${webdir}/bin
+cp /usr/local/plan9/lib/fortunes /var/www/lib
+
+# make root symlink to emulate /usr/local/plan9
+# some programs, during execution, get the value of the PLAN9 environment variable. that variable cannot
+# be set at each invocation of rc, because rc doesn't have an rc file like bash (.bashrc) and cannot be
+# executed like `PLAN9="/" rc' (the way CGI executes scripts doesn't allow that). the only other solution
+# I can think of would be to edit the werc/bin/werc.rc script to export PLAN9, but it would need to be done
+# after each werc update and the update-independent way to achieve that in this script would be difficult.
+# this is the simplest way to solve the problem (and probably the most elegant)
+mkdir -p ${webdir}/usr/local
+ln -s ${webdir}/ ${webdir}/usr/local/plan9
 
 # enable slowcgi and httpd
 rcctl enable slowcgi
