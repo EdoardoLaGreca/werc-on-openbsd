@@ -127,6 +127,10 @@ fi
 mkdir -p "${webdir}/dev"
 mknod -m 666 "${webdir}/dev/null" c 2 2 # "2 2" is OS-dependent
 
+# create /tmp in $webdir
+mkdir -p "${webdir}/tmp"
+chmod 1777 "${webdir}/tmp"
+
 # copy required things into the chroot environment
 mkdir -p ${webdir}/usr/local/plan9 ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin ${webdir}/usr/local/plan9/lib
 cp /usr/local/plan9/rcmain ${webdir}/usr/local/plan9
