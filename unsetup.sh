@@ -37,12 +37,11 @@ domain=${domain:-"example.com"}
 
 mv /etc/httpd.conf.bk /etc/httpd.conf
 mv /etc/fstab.bk /etc/fstab
-rm -r ${webdir}/werc
 
 while true
 do
 	read -p "remove bzip2 and plan9port packages? (y/n) " yn >&2
-	case $yp in
+	case $yn in
 		[Yy]* )
 			pkg_delete bzip2 plan9port
 			break
@@ -55,3 +54,5 @@ do
 			;;
 	esac
 done
+
+echo "now you may want to delete the contents of $webdir by yourself (remember that your website is in $webdir/werc)"
