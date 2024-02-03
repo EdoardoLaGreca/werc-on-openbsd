@@ -2,11 +2,13 @@
 
 Automate [Werc](http://werc.cat-v.org/) setup on [OpenBSD](https://www.openbsd.org/).
 
-The `setup.sh` script has been successfully tested on OpenBSD 7.2. Prior or later version of OpenBSD may not work.
+~~The `setup.sh` script has been successfully tested on OpenBSD 7.2. Prior or later version of OpenBSD may not work.~~
+
+**The `setup.sh` script has not been tested since the last change. Proceed with caution.**
 
 The `unsetup.sh` script has not been tested yet, but it is supposed to work.
 
-To preserve the original config files that are going to be modified, the setup script makes a copy (backup) of them and adds `.bk` at the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure NOT to have `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem.**
+To preserve the original config files that are going to be modified, the setup script makes a copy (backup) of them and adds `.bk` at the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure to NOT have `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem.**
 
 ## How-To
 
