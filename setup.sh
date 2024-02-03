@@ -143,11 +143,11 @@ ln /bin/{pwd,mv} ${webdir}/bin
 ln ${p9pdir}/lib/fortunes ${webdir}${p9pdir}/lib
 
 # recursively hard-link everyting (including sub-dirs) under ${p9pdir}/bin into the chroot environment
-allbins="$(find ${p9pdir}/bin -not -type d | sed 's/"/\\"/g' | sed "s|^${p9pdir}/bin/||")"
+allbins="$(find ${p9pdir}/bin -not -type d | sed "s|^${p9pdir}/bin/||")"
 for bin in $allbins
 do
 	dir=$(dirname $bin)
-	mkdir -p ${webdir}/${dir}
+	mkdir -p ${webdir}/bin/${dir}
 	ln ${p9pdir}/bin/${bin} ${webdir}/bin/${bin}
 done
 
