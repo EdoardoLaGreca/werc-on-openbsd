@@ -6,10 +6,10 @@
 set -o errexit
 
 # check os
-[ "$(uname)" != "OpenBSD" ] && { echo "$0: operating system is not OpenBSD" >&2 ; exit 1 ; }
+test "$(uname)" != "OpenBSD" && { echo "$0: operating system is not OpenBSD" >&2 ; exit 1 ; }
 
 # check root
-[ "$(whoami)" != "root" ] && { echo "$0: not running as root" >&2 ; exit 1 ; }
+test "$(whoami)" != "root" && { echo "$0: not running as root" >&2 ; exit 1 ; }
 
 # ----   begin   ----
 
@@ -30,10 +30,11 @@ webdir=${webdir:-"/var/www"}
 domain=${domain:-"example.com"}
 
 # check webdir value
-[ $(echo "${webdir}" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$') = "${webdir}" ] || {
+if [ $(echo "${webdir}" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$') = "${webdir}" ]
+then
 	echo "$0: invalid chroot directory" >&2
 	exit 1
-}
+fi
 
 mv /etc/httpd.conf.bk /etc/httpd.conf
 mv /etc/fstab.bk /etc/fstab
