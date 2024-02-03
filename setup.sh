@@ -31,7 +31,7 @@ webdir=${webdir:-"/var/www"}
 domain=${domain:-"example.com"}
 
 # check webdir value
-if [ $(echo "${webdir}" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$') = "${webdir}" ]
+if [ $(echo "${webdir}" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$') != "${webdir}" ]
 then
 	echo "$0: invalid chroot directory" >&2
 	exit 1
