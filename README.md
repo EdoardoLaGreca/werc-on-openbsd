@@ -21,7 +21,7 @@ To preserve the original config files that are going to be modified, the setup s
     sha256 -q setup.sh
     ```
  3. (optional) if you're a paranoid, you may want to check the script content before running it
- 4. change the `domain` variable (and `webdir`, if necessary) in `setup.sh`
+ 4. change the `domain` variable (and `webdir` if necessary) in `setup.sh`
  5. start the script as root
     ```sh
     doas ./setup.sh
@@ -52,4 +52,4 @@ SHA-256: `4c6f0f8c7236b386a6e3639a620effa2d017e830e0a8d16d1cef6df27108452b`
 
 ### `unsetup.sh`
 
-SHA-256: `5d0451e6d368a224659291c52fa20a99969e0c7d0e70ec7a97136a1a29137b98`
+SHA-256: `6dcb8a37718138bb26fe5088da49cb2b485c9721ef374408ec1a0ca8da5a7613`
