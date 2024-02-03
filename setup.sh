@@ -7,10 +7,10 @@
 set -o errexit
 
 # check os
-[ "$(uname)" != "OpenBSD" ] && { echo "$0: operating system is not OpenBSD" >&2 ; exit 1 ; }
+test "$(uname)" != "OpenBSD" && { echo "$0: operating system is not OpenBSD" >&2 ; exit 1 ; }
 
 # check root
-[ "$(whoami)" != "root" ] && { echo "$0: not running as root" >&2 ; exit 1 ; }
+test "$(whoami)" != "root" && { echo "$0: not running as root" >&2 ; exit 1 ; }
 
 # ----   begin   ----
 
@@ -21,7 +21,7 @@ set -o errexit
 webdir='/var/www'
 
 # the domain of your server
-# an invalid domain may result in an unsuccessful or even incomplete installation
+# an invalid domain may result in an unsuccessful or incomplete installation
 domain='example.com'
 
 # ----    end    ----
@@ -31,11 +31,12 @@ webdir=${webdir:-"/var/www"}
 domain=${domain:-"example.com"}
 
 # check webdir value
-[ $(echo "${webdir}" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$') = "${webdir}" ] || {
+if [ $(echo "${webdir}" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$') = "${webdir}" ]
+then
 	echo "$0: invalid chroot directory" >&2
 	exit 1
-}
-[ "${webdir}" = "/" ] && echo "$0: careful, webdir is root" >&2
+fi
+test "${webdir}" = "/" && echo "$0: careful, webdir is root" >&2
 
 # ----   functions   ----
 
@@ -44,12 +45,12 @@ check_fstab() {
 	dir="$1"
 
 	# get directories with "nodev"
-	fstab_dirs="$(egrep ',?nodev,?' /etc/fstab | cut -d ' ' -f 2)"
+	fstab_dirs="$(egrep ',?nodev,?' /etc/fstab | awk '{ print $2 }')"
 
 	# check for each $fstab_dir if it is a parent directory of $dir
 	for fstab_dir in ${fstab_dirs}
 	do
-		[ "$(echo "${dir}" | egrep "^${fstab_dir}/?")" ] return 0
+		test "$(echo "${dir}" | grep -E "^${fstab_dir}/?")" && return 0
 	done
 
 	return 1
@@ -70,10 +71,11 @@ cp -r ${siteroot}/../werc.cat-v.org/_werc ${siteroot}
 printf "# congratulations\n\nit works! :)\n" >${siteroot}/index.md
 
 # backup current httpd.conf
-[ -f /etc/httpd.conf ] && {
+if [ -f /etc/httpd.conf ]
+then
 	cp /etc/httpd.conf /etc/httpd.conf.bk
 	echo "$0: /etc/httpd.conf already exists, it has been copied to /etc/httpd.conf.bk" >&2
-}
+fi
 
 # write new httpd.conf
 # for some reason, httpd waits until timeout ("connection request timeout") for some files
@@ -109,7 +111,7 @@ types {
 ' >/etc/httpd.conf
 
 # if $webdir is (or is inside of) an entry in /etc/fstab that is marked as "nodev"
-if [ ( check_fstab "${webdir}" ) ]
+if check_fstab "${webdir}"
 then
 	# back up fstab
 	cp /etc/fstab /etc/fstab.bk
