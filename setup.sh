@@ -59,6 +59,7 @@ check_fstab() {
 # ---- end functions ----
 
 pkg_add bzip2 plan9port
+p9pdir='/usr/local/plan9'
 
 # download werc into the environment and set it up
 ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2
@@ -133,14 +134,22 @@ mknod -m 666 "${webdir}/dev/null" c 2 2 # "2 2" is OS-dependent
 mkdir -p "${webdir}/tmp"
 chmod 1777 "${webdir}/tmp"
 
-# copy required things into the chroot environment
-mkdir -p ${webdir}/usr/local/plan9 ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin ${webdir}/usr/local/plan9/lib
-cp /usr/local/plan9/rcmain ${webdir}/usr/local/plan9
-cp /usr/local/plan9/bin/* ${webdir}/bin
-cp /usr/libexec/ld.so ${webdir}/usr/libexec
-cp /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
-cp /bin/{pwd,mv} ${webdir}/bin
-cp /usr/local/plan9/lib/fortunes ${webdir}/usr/local/plan9/lib
+# hard-link required things into the chroot environment
+mkdir -p ${webdir}${p9pdir} ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin ${webdir}${p9pdir}/lib
+ln ${p9pdir}/rcmain ${webdir}${p9pdir}
+ln /usr/libexec/ld.so ${webdir}/usr/libexec
+ln /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
+ln /bin/{pwd,mv} ${webdir}/bin
+ln ${p9pdir}/lib/fortunes ${webdir}${p9pdir}/lib
+
+# recursively hard-link everyting (including sub-dirs) under ${p9pdir}/bin into the chroot environment
+allbins="$(find ${p9pdir}/bin -not -type d | sed 's/"/\\"/g' | sed "s|^${p9pdir}/bin/||")"
+for bin in $allbins
+do
+	dir=$(dirname $bin)
+	mkdir -p ${webdir}/${dir}
+	ln ${p9pdir}/bin/${bin} ${webdir}/bin/${bin}
+done
 
 # enable slowcgi and httpd
 rcctl enable slowcgi
