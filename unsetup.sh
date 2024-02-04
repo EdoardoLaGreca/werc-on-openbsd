@@ -36,6 +36,8 @@ then
 	exit 1
 fi
 
+p9pdir='/usr/local/plan9'
+
 # remove hard links and devices
 rm -f ${webdir}/dev ${webdir}${p9pdir} ${webdir}/usr ${webdir}/bin
 
