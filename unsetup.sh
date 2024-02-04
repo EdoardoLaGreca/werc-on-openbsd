@@ -39,7 +39,7 @@ fi
 p9pdir='/usr/local/plan9'
 
 # remove hard links and devices
-rm -f ${webdir}/dev ${webdir}${p9pdir} ${webdir}/usr ${webdir}/bin
+rm -fr ${webdir}/dev ${webdir}${p9pdir} ${webdir}/usr ${webdir}/bin
 
 # restore backups
 test -f /etc/httpd.conf.bk && mv -v /etc/httpd.conf.bk /etc/httpd.conf
