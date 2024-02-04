@@ -36,8 +36,12 @@ then
 	exit 1
 fi
 
-test -f /etc/httpd.conf.bk && mv /etc/httpd.conf.bk /etc/httpd.conf
-test -f /etc/fstab.bk && mv /etc/fstab.bk /etc/fstab
+# remove hard links and devices
+rm -f ${webdir}/dev ${webdir}${p9pdir} ${webdir}/usr ${webdir}/bin
+
+# restore backups
+test -f /etc/httpd.conf.bk && mv -v /etc/httpd.conf.bk /etc/httpd.conf
+test -f /etc/fstab.bk && mv -v /etc/fstab.bk /etc/fstab
 
 while true
 do
