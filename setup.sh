@@ -126,9 +126,12 @@ then
 	echo "$0: /etc/fstab changed, a reboot is required at the end of the setup process" >&2
 fi
 
-# create /dev/null in $webdir
+# create devices in $webdir
 mkdir -p "${webdir}/dev"
-mknod -m 666 "${webdir}/dev/null" c 2 2 # "2 2" is OS-dependent
+p=$(pwd)
+cd ${webdir}/dev
+/dev/MAKEDEV std
+cd $p
 
 # create /tmp in $webdir
 mkdir -p "${webdir}/tmp"
