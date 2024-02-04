@@ -22,7 +22,10 @@ To preserve the original config files that are going to be modified, the setup s
     ```sh
     sha256 -q setup.sh
     ```
- 3. (optional) if you're a paranoid, you may want to check the script content before running it
+ 3. make it executable
+    ```
+    chmod 744 setup.sh
+    ```
  4. change the `domain` variable (and `webdir` if necessary) in `setup.sh`
  5. start the script as root
     ```sh
@@ -39,7 +42,10 @@ To preserve the original config files that are going to be modified, the setup s
     ```sh
     sha256 -q unsetup.sh
     ```
- 3. (optional) if you're a paranoid, you may want to check the script content before running it
+ 3. make it executable
+    ```
+    chmod 744 setup.sh
+    ```
  4. change the `domain` and `webdir` variables as they were in `setup.sh`
  5. start the script as root
     ```sh
