@@ -47,7 +47,8 @@ test -f /etc/fstab.bk && mv -v /etc/fstab.bk /etc/fstab
 
 while true
 do
-	read -p "remove bzip2 and plan9port packages? (y/n) " yn >&2
+	echo -n "remove bzip2 and plan9port packages? (y/n) " >&2
+	read yn
 	case $yn in
 		[Yy]* )
 			pkg_delete bzip2 plan9port
