@@ -40,8 +40,9 @@ test "${webdir}" = "/" && echo "$0: careful, webdir is root" >&2
 
 # ----   functions   ----
 
-# check if directory is in (or is child of a directory in) fstab and it is marked as "nodev"
-check_fstab() {
+# check if a directory (or one of the parents of that directory) is an fstab entry marked as "nodev"
+# directories marked as "nodev" cannot contain special devices (e.g. /dev/null)
+is_nodev() {
 	dir="$1"
 
 	# get directories with "nodev"
@@ -111,8 +112,7 @@ types {
 }
 ' >/etc/httpd.conf
 
-# if $webdir is (or is inside of) an entry in /etc/fstab that is marked as "nodev"
-if check_fstab "${webdir}"
+if is_nodev "${webdir}"
 then
 	# back up fstab
 	cp /etc/fstab /etc/fstab.bk
