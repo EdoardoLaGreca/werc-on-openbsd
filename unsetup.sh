@@ -36,8 +36,8 @@ then
 	exit 1
 fi
 
-mv /etc/httpd.conf.bk /etc/httpd.conf
-mv /etc/fstab.bk /etc/fstab
+test -f /etc/httpd.conf.bk && mv /etc/httpd.conf.bk /etc/httpd.conf
+test -f /etc/fstab.bk && mv /etc/fstab.bk /etc/fstab
 
 while true
 do
