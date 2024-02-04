@@ -45,13 +45,24 @@ test "${webdir}" = "/" && echo "$0: careful, webdir is root" >&2
 is_nodev() {
 	dir="$1"
 
-	# get directories with "nodev"
-	fstab_dirs="$(egrep ',?nodev,?' /etc/fstab | awk '{ print $2 }')"
+	fstab_dir=`fstab_parent $dir`
 
-	# check for each $fstab_dir if it is a parent directory of $dir
-	for fstab_dir in ${fstab_dirs}
+	if echo $fstab_dir | grep -E ',?nodev,?' >/dev/null
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+# extract the directory from an /etc/fstab entry which contains a directory or one of its parents
+fstab_parent() {
+	dir="$1"
+
+	for entry in `awk '{ print $2 }' </etc/fstab`
 	do
-		test "$(echo "${dir}" | grep -E "^${fstab_dir}/?")" && return 0
+		test `echo $dir | grep -E "^$entry(/|$)"` && echo $entry
+		return 0
 	done
 
 	return 1
@@ -112,17 +123,16 @@ types {
 }
 ' >/etc/httpd.conf
 
-if is_nodev "${webdir}"
+if is_nodev $webdir
 then
-	# back up fstab
 	cp /etc/fstab /etc/fstab.bk
 
-	# remove "nodev" from /var in /etc/fstab so that we can create /dev/null
+	# remove "nodev" from $webdir in /etc/fstab so that we can create /dev/null
 	# this requires a reboot to be effective
-	oldline=$(grep ' /var ' /etc/fstab)
-	newline=$(echo "${oldline}" | sed 's/nodev//' | sed 's/,,/,/')
-	oldfile=$(cat /etc/fstab)
-	echo "${oldfile}" | sed "s#${oldline}#${newline}#" >/etc/fstab # this assumes that the line doesn't have a comment after (who puts comments at the end of fstab lines anyway?)
+	oldline=$(grep `fstab_parent $webdir` </etc/fstab)
+	newline=`echo "$oldline" | sed 's/nodev//' | sed 's/,,/,/'`
+	oldfile=`cat /etc/fstab`
+	echo "$oldfile" | sed "s!$oldline!$newline!" >/etc/fstab
 	echo "$0: /etc/fstab changed, a reboot is required at the end of the setup process" >&2
 fi
 
