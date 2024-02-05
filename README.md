@@ -12,7 +12,7 @@ To preserve the original config files that are going to be modified, the setup s
 
 Werc is quite popular among the [Plan 9](https://en.wikipedia.org/wiki/Plan_9_from_Bell_Labs) (and [9front](https://9front.org/)) users. Two possible and logical reasons are that:
 
-1. It was written to be used on Plan 9, so it works out of the box there.
+1. It was written using Plan 9's default shell, [Rc](https://p9f.org/sys/doc/rc.html).
 2. Like I said before, it is simple, and Plan 9 folks like simplicity.
 
 I didn't have much knowledge or experience with Plan 9 at the time. However, I did have knowledge and experience with Unix-like systems (a lot more, compared to Plan 9) and I knew about the existence of [plan9port](https://9fans.github.io/plan9port/), a port of the Plan 9 user space to Unix-like systems (thank you [Russ Cox](https://swtch.com/~rsc/)). A Unix-like operating system and plan9port were all I needed to make Werc work outside of Plan 9. On one hand, an operating system family that I was familiar with. On the other, the simplicity of Werc and the Plan 9 user space.
