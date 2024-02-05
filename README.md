@@ -56,7 +56,7 @@ To preserve the original config files that are going to be modified, the setup s
 
 ### `setup.sh`
 
-SHA-256: `2d1d1a5170a29924eefc2de572b7b342e159396d9b50e17af64296d9ffb78ccd`
+SHA-256: `d273f93a62f7b5343b8aed1cf985e27fce1e1ba4b6249134114f8a09cac268e2`
 
 ### `unsetup.sh`
 
