@@ -61,8 +61,8 @@ fstab_parent() {
 
 	for entry in `awk '{ print $2 }' </etc/fstab`
 	do
-		test `echo $dir | grep -E "^$entry(/|$)"` && echo $entry
-		return 0
+		echo $dir | grep -E "^$entry(/|$)" >/dev/null
+		test $? -eq 0 && return 0
 	done
 
 	return 1
@@ -78,6 +78,7 @@ ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2
 tar xjf tip.tar.bz2 -C ${webdir}
 rm tip.tar.bz2
 mv ${webdir}/werc-* ${webdir}/werc
+
 siteroot="${webdir}/werc/sites/${domain}"
 mkdir ${siteroot}
 cp -r ${siteroot}/../werc.cat-v.org/_werc ${siteroot}
@@ -93,7 +94,7 @@ fi
 # write new httpd.conf
 # for some reason, httpd waits until timeout ("connection request timeout") for some files
 echo \
-'server "'${domain}'" {
+'server "'$domain'" {
 
 	# see https://man.openbsd.org/httpd.conf to enable ssl/tls
 
@@ -105,12 +106,13 @@ echo \
 	}
 
 	location found "/*" {
-		root "/werc/sites/'${domain}'"
+		root "/werc/sites/'$domain'"
 	}
 
 	location not found "/*" {
 		root "/"
 		fastcgi {
+			param PLAN9 "'$p9pdir'"
 			param DOCUMENT_ROOT "/werc/bin"
 			param SCRIPT_FILENAME "/werc/bin/werc.rc"
 			socket "/run/slowcgi.sock"
