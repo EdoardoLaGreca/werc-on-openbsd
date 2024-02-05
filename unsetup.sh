@@ -30,7 +30,8 @@ webdir=${webdir:-"/var/www"}
 domain=${domain:-"example.com"}
 
 # check webdir value
-if [ $(echo "${webdir}" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$') != "${webdir}" ]
+echo "$webdir" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$' >/dev/null
+if [ $? -eq 1 ]
 then
 	echo "$0: invalid chroot directory" >&2
 	exit 1
@@ -39,7 +40,7 @@ fi
 p9pdir='/usr/local/plan9'
 
 # remove hard links and devices
-rm -fr ${webdir}/dev ${webdir}${p9pdir} ${webdir}/usr ${webdir}/bin
+rm -fr $webdir/dev $webdir/tmp $webdir$p9pdir $webdir/usr $webdir/bin
 
 # restore backups
 test -f /etc/httpd.conf.bk && mv -v /etc/httpd.conf.bk /etc/httpd.conf
