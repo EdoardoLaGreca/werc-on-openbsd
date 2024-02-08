@@ -16,13 +16,13 @@ test "$(whoami)" != "root" && { echo "$0: not running as root" >&2 ; exit 1 ; }
 
 # this section contains customizable variables, consider setting their values before running the script
 
-# directory where the httpd chroot environment will be
-# this is ok for most cases; change this only if you know what you're doing
-webdir='/var/www'
-
 # the domain of your server
 # an invalid domain may result in an unsuccessful or incomplete installation
 domain='example.com'
+
+# directory where the httpd chroot environment will be
+# this is ok for most cases; change this only if you know what you're doing
+webdir='/var/www'
 
 # ----    end    ----
 
@@ -31,12 +31,13 @@ webdir=${webdir:-"/var/www"}
 domain=${domain:-"example.com"}
 
 # check webdir value
-if [ $(echo "${webdir}" | egrep '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$') != "${webdir}" ]
+echo "$webdir" | grep -E '^(/|(/[[:alnum:]._][-[:alnum:]._]*)+)$' >/dev/null
+if [ $? -eq 1 ]
 then
 	echo "$0: invalid chroot directory" >&2
 	exit 1
 fi
-test "${webdir}" = "/" && echo "$0: careful, webdir is root" >&2
+test $webdir = "/" && echo "$0: careful, webdir is root" >&2
 
 # ----   functions   ----
 
@@ -145,31 +146,31 @@ then
 fi
 
 # create devices in $webdir
-mkdir -p "${webdir}/dev"
+mkdir -p "$webdir/dev"
 p=$(pwd)
-cd ${webdir}/dev
+cd $webdir/dev
 /dev/MAKEDEV std
 cd $p
 
 # create /tmp in $webdir
-mkdir -p "${webdir}/tmp"
-chmod 1777 "${webdir}/tmp"
+mkdir -p "$webdir/tmp"
+chmod 1777 "$webdir/tmp"
 
 # hard-link (or copy) required things into the chroot environment
-mkdir -p ${webdir}${p9pdir} ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin ${webdir}${p9pdir}/lib
-lncp ${p9pdir}/rcmain ${webdir}${p9pdir}
-lncp /usr/libexec/ld.so ${webdir}/usr/libexec
-lncp /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
-lncp /bin/{pwd,mv} ${webdir}/bin
-lncp ${p9pdir}/lib/fortunes ${webdir}${p9pdir}/lib
+mkdir -p $webdir$p9pdir $webdir/usr/libexec $webdir/usr/lib $webdir/bin $webdir$p9pdir/lib
+lncp $p9pdir/rcmain $webdir$p9pdir
+lncp /usr/libexec/ld.so $webdir/usr/libexec
+lncp /usr/lib/lib{m,util,pthread,c,z,expat}.so* $webdir/usr/lib
+lncp /bin/{pwd,mv} $webdir/bin
+lncp $p9pdir/lib/fortunes $webdir$p9pdir/lib
 
-# recursively hard-link (or copy) everyting (including sub-dirs) under ${p9pdir}/bin into the chroot environment
-allbins="$(find ${p9pdir}/bin -not -type d | sed "s|^${p9pdir}/bin/||")"
+# recursively hard-link (or copy) everyting (including sub-dirs) under $p9pdir/bin into the chroot environment
+allbins="$(find $p9pdir/bin -not -type d | sed "s|^$p9pdir/bin/||")"
 for bin in $allbins
 do
 	dir=$(dirname $bin)
-	mkdir -p ${webdir}/bin/${dir}
-	lncp ${p9pdir}/bin/${bin} ${webdir}/bin/${bin}
+	mkdir -p $webdir/bin/$dir
+	lncp $p9pdir/bin/$bin $webdir/bin/$bin
 done
 
 # enable slowcgi and httpd
