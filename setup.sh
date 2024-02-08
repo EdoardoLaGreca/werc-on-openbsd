@@ -174,8 +174,7 @@ do
 done
 
 # enable slowcgi and httpd
-rcctl enable slowcgi
-rcctl enable httpd
+rcctl enable slowcgi httpd
 
 echo "$0: setup completed!" >&2
 echo "$0: check prior messages to see if you need to reboot; otherwise, you can start the httpd and slowcgi services" >&2
