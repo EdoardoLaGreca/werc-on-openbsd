@@ -75,14 +75,15 @@ p9pdir='/usr/local/plan9'
 
 # download werc into the environment and set it up
 ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2
-tar xjf tip.tar.bz2 -C ${webdir}
+tar xjf tip.tar.bz2 -C $webdir
 rm tip.tar.bz2
-mv ${webdir}/werc-* ${webdir}/werc
+mv $webdir/werc-* $webdir/werc
 
-siteroot="${webdir}/werc/sites/${domain}"
-mkdir ${siteroot}
-cp -r ${siteroot}/../werc.cat-v.org/_werc ${siteroot}
-printf "# congratulations\n\nit works! :)\n" >${siteroot}/index.md
+siteroot="$webdir/werc/sites/$domain"
+mkdir $siteroot
+cp -r $siteroot/../default.cat-v.org/_werc $siteroot
+cp -r $webdir/werc/lib $siteroot/_werc
+printf "# congratulations\n\nit works! :)\n" >$siteroot/index.md
 
 # backup current httpd.conf
 if [ -f /etc/httpd.conf ]
