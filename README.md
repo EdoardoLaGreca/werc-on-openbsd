@@ -69,7 +69,7 @@ In addition to all I said before, and this was by far the hardest goal to achiev
 
 ### `setup.sh`
 
-SHA-256: `a01dc488a6ef8e6ddb6b8a62fc42c6e3dd091c6d03118e2cfdbe2387fd2b3a92`
+SHA-256: `73f8e69b1123d921d514a88e39f827f15569fe29591528a92c37f87337d66810`
 
 ### `unsetup.sh`
 
