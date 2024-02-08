@@ -68,12 +68,9 @@ fstab_parent() {
 	return 1
 }
 
-# hard-link src to dst if possible, otherwise copy
+# acts like `ln` if possible, otherwise `cp`
 lncp() {
-	src=$1
-	dst=$2
-
-	ln $src $dst 2>/dev/null || cp $src $dst
+	ln $* 2>/dev/null || cp $*
 }
 
 # ---- end functions ----
