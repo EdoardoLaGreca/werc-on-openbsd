@@ -73,7 +73,7 @@ lncp() {
 	src=$1
 	dst=$2
 
-	ln $src $dst || cp $src $dst
+	ln $src $dst 2>/dev/null || cp $src $dst
 }
 
 # ---- end functions ----
