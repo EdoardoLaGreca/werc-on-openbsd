@@ -68,6 +68,14 @@ fstab_parent() {
 	return 1
 }
 
+# hard-link src to dst if possible, otherwise copy
+lncp() {
+	src=$1
+	dst=$2
+
+	ln $src $dst || cp $src $dst
+}
+
 # ---- end functions ----
 
 pkg_add bzip2 plan9port
@@ -150,21 +158,21 @@ cd $p
 mkdir -p "${webdir}/tmp"
 chmod 1777 "${webdir}/tmp"
 
-# hard-link required things into the chroot environment
+# hard-link (or copy) required things into the chroot environment
 mkdir -p ${webdir}${p9pdir} ${webdir}/usr/libexec ${webdir}/usr/lib ${webdir}/bin ${webdir}${p9pdir}/lib
-ln ${p9pdir}/rcmain ${webdir}${p9pdir}
-ln /usr/libexec/ld.so ${webdir}/usr/libexec
-ln /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
-ln /bin/{pwd,mv} ${webdir}/bin
-ln ${p9pdir}/lib/fortunes ${webdir}${p9pdir}/lib
+lncp ${p9pdir}/rcmain ${webdir}${p9pdir}
+lncp /usr/libexec/ld.so ${webdir}/usr/libexec
+lncp /usr/lib/lib{m,util,pthread,c,z,expat}.so* ${webdir}/usr/lib
+lncp /bin/{pwd,mv} ${webdir}/bin
+lncp ${p9pdir}/lib/fortunes ${webdir}${p9pdir}/lib
 
-# recursively hard-link everyting (including sub-dirs) under ${p9pdir}/bin into the chroot environment
+# recursively hard-link (or copy) everyting (including sub-dirs) under ${p9pdir}/bin into the chroot environment
 allbins="$(find ${p9pdir}/bin -not -type d | sed "s|^${p9pdir}/bin/||")"
 for bin in $allbins
 do
 	dir=$(dirname $bin)
 	mkdir -p ${webdir}/bin/${dir}
-	ln ${p9pdir}/bin/${bin} ${webdir}/bin/${bin}
+	lncp ${p9pdir}/bin/${bin} ${webdir}/bin/${bin}
 done
 
 # enable slowcgi and httpd
