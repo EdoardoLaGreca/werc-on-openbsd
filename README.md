@@ -25,42 +25,54 @@ In addition to all I said before, and this was by far the hardest goal to achiev
 
 ## How-To
 
+The following procedures download scripts using the latest release's tarball, which is usually tested before publication. Although it is NOT recommended, you can download the scripts from the main branch with the following command
+
+```
+ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/main/<script>
+```
+
+where `<script>` needs to be replaced with the appropriate script name.
+
 ### Setup
 
- 1. download the setup script (`setup.sh`)
+1. download the latest release tarball and extract it
     ```sh
-    ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/main/setup.sh
+    ftp https://github.com/EdoardoLaGreca/werc-on-openbsd/archive/refs/tags/v1.1.tar.gz
+    tar -xzf v1.1.tar.gz
+    cd werc-on-openbsd-1.1
     ```
- 2. verify its checksum (see [Checksums](#checksums))
+2. verify its checksum (see [Checksums](#checksums))
     ```sh
     sha256 -q setup.sh
     ```
- 3. make it executable
+3. change the `domain` variable (and `webdir` if necessary) in `setup.sh`
+4. make it executable
     ```
     chmod 744 setup.sh
     ```
- 4. change the `domain` variable (and `webdir` if necessary) in `setup.sh`
- 5. start the script as root
+5. start the script as root
     ```sh
     doas ./setup.sh
     ```
 
 ### Un-setup
 
- 1. download the unsetup script (`unsetup.sh`)
+1. download the latest release tarball and extract it
     ```sh
-    ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/main/unsetup.sh
+    ftp https://github.com/EdoardoLaGreca/werc-on-openbsd/archive/refs/tags/v1.1.tar.gz
+    tar -xzf v1.1.tar.gz
+    cd werc-on-openbsd-1.1
     ```
- 2. verify its checksum (see [Checksums](#checksums))
+2. verify its checksum (see [Checksums](#checksums))
     ```sh
     sha256 -q unsetup.sh
     ```
- 3. make it executable
+3. change the `domain` and `webdir` variables as they were in `setup.sh`
+4. make it executable
     ```
     chmod 744 unsetup.sh
     ```
- 4. change the `domain` and `webdir` variables as they were in `setup.sh`
- 5. start the script as root
+5. start the script as root
     ```sh
     doas ./unsetup.sh
     ```
