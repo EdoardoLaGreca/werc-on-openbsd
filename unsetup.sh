@@ -53,6 +53,11 @@ do
 	case $yn in
 		[Yy]* )
 			pkg_delete bzip2 plan9port
+			if [ $? -ne 0 ]
+			do
+				echo "unable to remove one or more packages" >&2
+				exit 1
+			done
 			break
 			;;
 		[Nn]* )
