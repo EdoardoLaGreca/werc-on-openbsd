@@ -57,7 +57,7 @@ In addition to all I said before, and this was by far the hardest goal to achiev
     ```
  3. make it executable
     ```
-    chmod 744 setup.sh
+    chmod 744 unsetup.sh
     ```
  4. change the `domain` and `webdir` variables as they were in `setup.sh`
  5. start the script as root
