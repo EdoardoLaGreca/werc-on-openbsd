@@ -39,9 +39,9 @@ where `<script>` needs to be replaced with the appropriate script name.
 
 1. download the latest release tarball and extract it
     ```sh
-    ftp https://github.com/EdoardoLaGreca/werc-on-openbsd/archive/refs/tags/v1.1.tar.gz
-    tar -xzf v1.1.tar.gz
-    cd werc-on-openbsd-1.1
+    ftp https://github.com/EdoardoLaGreca/werc-on-openbsd/archive/refs/tags/v1.2.tar.gz
+    tar -xzf v1.2.tar.gz
+    cd werc-on-openbsd-1.2
     ```
 2. verify its checksum (see [Checksums](#checksums))
     ```sh
@@ -61,9 +61,9 @@ where `<script>` needs to be replaced with the appropriate script name.
 
 1. download the latest release tarball and extract it
     ```sh
-    ftp https://github.com/EdoardoLaGreca/werc-on-openbsd/archive/refs/tags/v1.1.tar.gz
-    tar -xzf v1.1.tar.gz
-    cd werc-on-openbsd-1.1
+    ftp https://github.com/EdoardoLaGreca/werc-on-openbsd/archive/refs/tags/v1.2.tar.gz
+    tar -xzf v1.2.tar.gz
+    cd werc-on-openbsd-1.2
     ```
 2. verify its checksum (see [Checksums](#checksums))
     ```sh
