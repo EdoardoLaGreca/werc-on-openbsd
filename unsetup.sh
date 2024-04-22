@@ -64,5 +64,7 @@ do
 	esac
 done
 
-echo "now you may want to delete the contents of $webdir by yourself (remember that your website is in $webdir/werc)"
-echo "also, you may want to disable the httpd and slowcgi daemons by yourself"
+echo
+echo "The unsetup operation was successful."
+echo "Now you may want to delete the contents of $webdir by yourself (remember: your website is in $webdir/werc/sites/$domain)."
+echo "Also, you may want to disable the httpd and slowcgi daemons."
