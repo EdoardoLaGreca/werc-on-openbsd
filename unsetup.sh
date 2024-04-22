@@ -69,7 +69,7 @@ do
 	esac
 done
 
-echo
-echo "The unsetup operation was successful."
-echo "Now you may want to delete the contents of $webdir by yourself (remember: your website is in $webdir/werc/sites/$domain)."
-echo "Also, you may want to disable the httpd and slowcgi daemons."
+echo >&2
+echo "$0: the unsetup operation was successful" >&2
+echo "$0: now you may want to delete the contents of $webdir by yourself (remember: your website is in $webdir/werc/sites/$domain)" >&2
+echo "$0: also, you may want to disable the httpd and slowcgi daemons" >&2
