@@ -15,13 +15,13 @@ test "$(whoami)" != "root" && { echo "$0: not running as root" >&2 ; exit 1 ; }
 
 # this section contains customizable variables, consider setting their values before running the script
 
-# directory where the httpd chroot environment will be
-# this is ok for most cases; change this only if you know what you're doing
-webdir='/var/www'
-
 # the domain of your server
 # an invalid domain may result in an unsuccessful or even incomplete installation
 domain='example.com'
+
+# directory where the httpd chroot environment will be
+# this is ok for most cases; change this only if you know what you're doing
+webdir='/var/www'
 
 # ----    end    ----
 
