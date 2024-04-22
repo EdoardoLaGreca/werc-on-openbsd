@@ -2,7 +2,9 @@
 
 Automate [Werc](http://werc.cat-v.org/) setup on [OpenBSD](https://www.openbsd.org/).
 
-Both the `setup.sh` and `unsetup.sh` scripts have been successfully tested on OpenBSD 7.4. Prior or later version of OpenBSD may not work.
+Both the `setup.sh` and `unsetup.sh` scripts (in their current version) have been successfully tested on OpenBSD 7.5. Prior or later versions of OpenBSD may not work.
+
+**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the plan9port package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a plan9port update, and to reinstall Werc (using the two scripts) when it stops working.
 
 To preserve the original config files that are going to be modified, the setup script makes a copy (backup) of them and adds `.bk` at the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure to NOT have `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem.**
 
