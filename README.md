@@ -35,6 +35,24 @@ ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/main/<scrip
 
 where `<script>` needs to be replaced with the appropriate script name.
 
+### ⚠️ IMPORTANT: OpenBSD 7.6
+
+The script won't work for OpenBSD 7.6 (installed with its default options) due to an error (segmentation fault) that occurs when issuing the command to install the `plan9port` package.
+
+Of the two packages required by the setup script, `plan9port` and `bzip2`, only `plan9port` is affected by this issue.
+
+At the moment, this is the only known issue that prevents the script from successfully terminating.
+
+[possible bug report?](https://marc.info/?l=openbsd-bugs&m=172839281424784&w=2)
+
+![segfault](pkgadd_segfault.png)
+
+#### Temporary workaround
+
+A temporary workaround is to manually install plan9port ([guide]()) into `/usr/local/plan9` and to replace the command that installs `plan9port` and `bzip2` (`pkg_add ...`) with one that only installs `bzip2`. The rest of the script should be good if unchanged.
+
+This workaround has not been tested. Proceed with caution and report all the bugs you find.
+
 ### Setup
 
 1. download the latest release tarball and extract it
