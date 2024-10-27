@@ -25,77 +25,27 @@ Another thing I really cared about, back when I started writing this script, is 
 
 In addition to all I said before, and this was by far the hardest goal to achieve, it had to comply with OpenBSD's [httpd](https://man.openbsd.org/httpd) way of doing things. That is, the hosted website had to be `chroot`'ed into `/var/www`, so that potential breaches would only be limited to that portion of the file system. At first, since [symlinks](https://en.wikipedia.org/wiki/Symbolic_link) cannot be accessed from a `chroot`'ed environment, I solved it the naïve way: I just copied all the Plan 9 utilities, together with their dependencies, into `/var/www`. That was not the best solution, not even close, but it worked for a while. With recent changes now everything is just [hard links](https://en.wikipedia.org/wiki/Hard_link), which consume way less data on disk. I'm happy with this new solution and I don't think I will change it any time soon.
 
-## How-To
+## Usage
 
-The following procedures download scripts using the latest release's tarball, which is usually tested before publication. Although it is NOT recommended, you can download the scripts from the main branch with the following command
+The following procedure downloads scripts using the latest release tag, which has been tested before publication. The latest tag shown in the URL below is manually updated, please check that it matches the actual latest release before proceeding. It is not recommended (at all) to run scripts from the `main` branch.
 
+The following procedure refers to the setup script (`setup.sh`). For the un-setup script (`unsetup.sh`), the procedure is the same except for the script name.
+
+The procedure is as follows, written both in human-readable steps and as commands:
+
+1. Download the script from the latest tag.
+2. Verify the script's checksum (see [Checksums](#checksums)).
+3. Change the `domain` variable (and `webdir`, if necessary) at will.
+4. Set the execution permission bit of the script.
+5. Start the script as root.
+
+```sh
+ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v1.2/script.sh
+sha256 -q setup.sh
+vi setup.sh	# change domain and webdir
+chmod 744 setup.sh
+doas ./setup.sh
 ```
-ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/main/<script>
-```
-
-where `<script>` needs to be replaced with the appropriate script name.
-
-### ⚠️ IMPORTANT: OpenBSD 7.6
-
-The script won't work for OpenBSD 7.6 (installed with its default options) due to an error (segmentation fault) that occurs when issuing the command to install the `plan9port` package.
-
-Of the two packages required by the setup script, `plan9port` and `bzip2`, only `plan9port` is affected by this issue.
-
-At the moment, this is the only known issue that prevents the script from successfully terminating.
-
-[possible bug report?](https://marc.info/?l=openbsd-bugs&m=172839281424784&w=2)
-
-![segfault](pkgadd_segfault.png)
-
-#### Temporary workaround
-
-A temporary workaround is to manually install plan9port ([guide]()) into `/usr/local/plan9` and to replace the command that installs `plan9port` and `bzip2` (`pkg_add ...`) with one that only installs `bzip2`. The rest of the script should be good if unchanged.
-
-This workaround has not been tested. Proceed with caution and report all the bugs you find.
-
-### Setup
-
-1. download the latest release tarball and extract it
-    ```sh
-    ftp https://github.com/EdoardoLaGreca/werc-on-openbsd/archive/refs/tags/v1.2.tar.gz
-    tar -xzf v1.2.tar.gz
-    cd werc-on-openbsd-1.2
-    ```
-2. verify its checksum (see [Checksums](#checksums))
-    ```sh
-    sha256 -q setup.sh
-    ```
-3. change the `domain` variable (and `webdir` if necessary) in `setup.sh`
-4. make it executable
-    ```
-    chmod 744 setup.sh
-    ```
-5. start the script as root
-    ```sh
-    doas ./setup.sh
-    ```
-
-### Un-setup
-
-1. download the latest release tarball and extract it
-    ```sh
-    ftp https://github.com/EdoardoLaGreca/werc-on-openbsd/archive/refs/tags/v1.2.tar.gz
-    tar -xzf v1.2.tar.gz
-    cd werc-on-openbsd-1.2
-    ```
-2. verify its checksum (see [Checksums](#checksums))
-    ```sh
-    sha256 -q unsetup.sh
-    ```
-3. change the `domain` and `webdir` variables as they were in `setup.sh`
-4. make it executable
-    ```
-    chmod 744 unsetup.sh
-    ```
-5. start the script as root
-    ```sh
-    doas ./unsetup.sh
-    ```
 
 ## Checksums
 
