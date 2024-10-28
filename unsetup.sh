@@ -40,6 +40,7 @@ then
 fi
 
 p9pdir='/usr/local/plan9'
+siteroot="$webdir/werc/sites/$domain"
 
 # remove hard links, copies, devices
 rm -fr $webdir/dev $webdir/tmp $webdir$p9pdir $webdir/usr $webdir/bin
@@ -87,4 +88,5 @@ do
 done
 
 echo
-echo "$0: the unsetup operation was successful, now you may want to delete the contents of $webdir by yourself (remember: your website is in $webdir/werc/sites/$domain)"
+echo "$0: the unsetup operation was successful"
+echo "$0: the content of your site ($siteroot) has not been removed"

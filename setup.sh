@@ -86,9 +86,11 @@ rm tip.tar.bz2
 mv $webdir/werc-* $webdir/werc
 
 siteroot="$webdir/werc/sites/$domain"
+
+# default siteroot contents
 mkdir $siteroot
-cp -r $siteroot/../default.cat-v.org/_werc $siteroot
-cp -r $webdir/werc/lib $siteroot/_werc
+mkdir $siteroot/_werc
+cp -R $webdir/werc/lib $siteroot/_werc
 printf "# congratulations\n\nit works! :)\n" >$siteroot/index.md
 
 # backup current httpd.conf
@@ -129,8 +131,7 @@ echo \
 
 types {
 	include "/usr/share/misc/mime.types"
-}
-' >/etc/httpd.conf
+}' >/etc/httpd.conf
 
 if is_nodev $webdir
 then
@@ -176,7 +177,6 @@ done
 # enable slowcgi and httpd
 rcctl enable slowcgi httpd
 
+echo
 echo "$0: setup completed!"
 echo "$0: check prior messages to see if you need to reboot; otherwise, you can start the httpd and slowcgi services"
-
-exit 0
