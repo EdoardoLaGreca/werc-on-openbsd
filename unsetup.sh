@@ -18,74 +18,122 @@ webdir='/var/www'
 
 # ---- end variables ----
 
-# exit on first error
-set -o errexit
+# ---- parts ----
 
-# check os
-test "$(uname)" != "OpenBSD" && { echo "$0: operating system is not OpenBSD" >&2 ; exit 1 ; }
+preuninst() {
+	if [ $(uname) != "OpenBSD" ]
+	then
+		echo "$0: operating system is not OpenBSD" >&2
+		return 1
+	fi
 
-# check root
-test "$(whoami)" != "root" && { echo "$0: not running as root" >&2 ; exit 1 ; }
+	if [ $(whoami) != "root" ]
+	then
+		echo "$0: not running as root" >&2
+		return 1
+	fi
+
+	# check webdir's value
+	echo "$webdir" | grep -E '^(/[^[:cntrl:]]+)+$' >/dev/null
+	if [ $? -eq 1 ]
+	then
+		echo "$0: invalid chroot directory" >&2
+		return 1
+	fi
+}
+
+uninst() {
+	# remove hard links, copies, devices
+	rm -fr $webdir/dev $webdir/tmp $webdir$p9pdir $webdir/usr $webdir/bin
+}
+
+restore() {
+	# restore backups
+	test -f /etc/httpd.conf.bk && mv -v /etc/httpd.conf.bk /etc/httpd.conf
+	test -f /etc/fstab.bk && mv -v /etc/fstab.bk /etc/fstab
+}
+
+# remove packages
+rmpkgs() {
+	while true
+	do
+		echo -n "remove bzip2 and plan9port packages? (y/n) "
+		read yn
+		case $yn in
+			[Yy]* )
+				pkg_delete bzip2 plan9port
+				break
+				;;
+			[Nn]* )
+				break
+				;;
+			* )
+				continue
+				;;
+		esac
+	done
+}
+
+# disable services
+services() {
+	while true
+	do
+		echo -n "disable the slowcgi and httpd services? (y/n) "
+		read yn
+		case $yn in
+			[Yy]* )
+				rcctl disable slowcgi httpd
+				break
+				;;
+			[Nn]* )
+				break
+				;;
+			* )
+				continue
+				;;
+		esac
+	done
+}
+
+# ---- end parts ----
 
 # default values if unset or empty
 webdir=${webdir:-"/var/www"}
 domain=${domain:-"example.com"}
 
-# check webdir's value
-echo "$webdir" | grep -E '^(/[^[:cntrl:]]+)+$' >/dev/null
-if [ $? -eq 1 ]
-then
-	echo "$0: invalid chroot directory" >&2
-	exit 1
-fi
-
+# other useful variables
 p9pdir='/usr/local/plan9'
 siteroot="$webdir/werc/sites/$domain"
 
-# remove hard links, copies, devices
-rm -fr $webdir/dev $webdir/tmp $webdir$p9pdir $webdir/usr $webdir/bin
+if ! preuninst
+then
+	echo "$0: could not complete pre-installation checks" >&2
+	exit 1
+fi
 
-# restore backups
-test -f /etc/httpd.conf.bk && mv -v /etc/httpd.conf.bk /etc/httpd.conf
-test -f /etc/fstab.bk && mv -v /etc/fstab.bk /etc/fstab
+if ! uninst
+then
+	echo "$0: could not uninstall werc" >&2
+	exit 1
+fi
 
-# remove packages
-while true
-do
-	echo -n "remove bzip2 and plan9port packages? (y/n) "
-	read yn
-	case $yn in
-		[Yy]* )
-			pkg_delete bzip2 plan9port
-			break
-			;;
-		[Nn]* )
-			break
-			;;
-		* )
-			continue
-			;;
-	esac
-done
+if ! restore
+then
+	echo "$0: could not restore backed up files" >&2
+	exit 1
+fi
 
-# disable services
-while true
-do
-	echo -n "disable the slowcgi and httpd services? (y/n) "
-	read yn
-	case $yn in
-		[Yy]* )
-			rcctl disable slowcgi httpd
-			break
-			;;
-		[Nn]* )
-			break
-			;;
-		* )
-			continue
-			;;
-	esac
-done
+if ! rmpkgs
+then
+	echo "$0: could not remove packages" >&2
+	exit 1
+fi
+
+if ! services
+then
+	echo "$0: could not remove services" >&2
+	exit 1
+fi
 
 echo
 echo "$0: the unsetup operation was successful"

@@ -56,56 +56,125 @@ lncp() {
 
 # ---- end functions ----
 
-# exit on first error
-set -o errexit
+# ---- parts ----
 
-# check os
-test "$(uname)" != "OpenBSD" && { echo "$0: operating system is not OpenBSD" >&2 ; exit 1 ; }
+# pre-installation checks
+preinst() {
+	if [ $(uname) != "OpenBSD" ]
+	then
+		echo "$0: operating system is not OpenBSD" >&2
+		return 1
+	fi
 
-# check root
-test "$(whoami)" != "root" && { echo "$0: not running as root" >&2 ; exit 1 ; }
+	if [ $(whoami) != "root" ]
+	then
+		echo "$0: not running as root user" >&2
+		return 1
+	fi
+
+	# check webdir's value
+	echo "$webdir" | grep -E '^(/[^[:cntrl:]]+)+$' >/dev/null
+	if [ $? -eq 1 ]
+	then
+		echo "$0: invalid chroot directory" >&2
+		return 1
+	fi
+}
+
+# configure httpd
+httpdconf() {
+	# backup current httpd.conf
+	if [ -r /etc/httpd.conf ]
+	then
+		cp /etc/httpd.conf /etc/httpd.conf.bk
+		echo "$0: /etc/httpd.conf exists, backed up to /etc/httpd.conf.bk" >&2
+	fi
+
+	# new httpd.conf
+	# for some reason, httpd waits until timeout ("connection request timeout") for some files
+	echo "$httpdconffile" >/etc/httpd.conf
+}
+
+# configure fstab
+fstabconf() {
+	if is_nodev $webdir
+	then
+		cp /etc/fstab /etc/fstab.bk
+
+		# remove "nodev" from $webdir in /etc/fstab so that we can create /dev/null
+		# this requires a reboot to be effective
+		oldline=$(grep `fstab_parent $webdir` </etc/fstab)
+		newline=`echo "$oldline" | sed 's/nodev//' | sed 's/,,/,/'`
+		oldfile=`cat /etc/fstab`
+		echo "$oldfile" | sed "s!$oldline!$newline!" >/etc/fstab
+		echo "$0: /etc/fstab has been changed, a reboot is required at the end of the setup process"
+	fi
+}
+
+# werc installation
+inst() {
+	pkg_add bzip2 plan9port || return 1
+
+	ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2 || return 1
+	tar xjf tip.tar.bz2 -C $webdir
+	rm tip.tar.bz2
+	mv $webdir/werc-* $webdir/werc
+
+	# default siteroot contents
+	mkdir $siteroot
+	mkdir $siteroot/_werc
+	cp -R $webdir/werc/lib $siteroot/_werc
+	printf "# congratulations\n\nit works! :)\n" >$siteroot/index.md
+}
+
+# pour files and directories into $webdir
+mkweb() {
+	# create devices
+	mkdir -p "$webdir/dev"
+	p=$(pwd)
+	cd $webdir/dev
+	/dev/MAKEDEV std
+	cd $p
+
+	# create /tmp in $webdir
+	mkdir -p "$webdir/tmp"
+	chmod 1777 "$webdir/tmp"
+
+	# lncp required things into the chroot environment
+	mkdir -p $webdir$p9pdir $webdir/usr/libexec $webdir/usr/lib $webdir/bin $webdir$p9pdir/lib
+	lncp $p9pdir/rcmain $webdir$p9pdir
+	lncp /usr/libexec/ld.so $webdir/usr/libexec
+	lncp /usr/lib/lib{m,util,pthread,c,z,expat}.so* $webdir/usr/lib
+	lncp /bin/{pwd,mv} $webdir/bin
+	lncp $p9pdir/lib/fortunes $webdir$p9pdir/lib
+
+	# recursively lncp everyting (including sub-dirs) under $p9pdir/bin into the chroot environment
+	allbins="$(find $p9pdir/bin -not -type d | sed "s|^$p9pdir/bin/||")"
+	for bin in $allbins
+	do
+		dir=$(dirname $bin)
+		mkdir -p $webdir/bin/$dir
+		lncp $p9pdir/bin/$bin $webdir/bin/$bin
+	done
+}
+
+services() {
+	# enable slowcgi and httpd
+	rcctl enable slowcgi httpd
+}
+
+# ---- end parts ----
 
 # default values if unset or empty
 domain=${domain:-"example.com"}
 webdir=${webdir:-"/var/www"}
 
-# check webdir's value
-echo "$webdir" | grep -E '^(/[^[:cntrl:]]+)+$' >/dev/null
-if [ $? -eq 1 ]
-then
-	echo "$0: invalid chroot directory" >&2
-	exit 1
-fi
-
-pkg_add bzip2 plan9port
+# other useful variables
 p9pdir='/usr/local/plan9'
-
-ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2
-tar xjf tip.tar.bz2 -C $webdir
-rm tip.tar.bz2
-mv $webdir/werc-* $webdir/werc
-
 siteroot="$webdir/werc/sites/$domain"
+httpdconffile='server "'$domain'" {
 
-# default siteroot contents
-mkdir $siteroot
-mkdir $siteroot/_werc
-cp -R $webdir/werc/lib $siteroot/_werc
-printf "# congratulations\n\nit works! :)\n" >$siteroot/index.md
-
-# backup current httpd.conf
-if [ -r /etc/httpd.conf ]
-then
-	cp /etc/httpd.conf /etc/httpd.conf.bk
-	echo "$0: /etc/httpd.conf already exists, it has been copied to /etc/httpd.conf.bk" >&2
-fi
-
-# new httpd.conf
-# for some reason, httpd waits until timeout ("connection request timeout") for some files
-echo \
-'server "'$domain'" {
-
-	# see https://man.openbsd.org/httpd.conf to enable ssl/tls
+	# see httpd.conf(5) to enable ssl/tls
 
 	listen on * port 80
 	connection request timeout 4
@@ -131,51 +200,43 @@ echo \
 
 types {
 	include "/usr/share/misc/mime.types"
-}' >/etc/httpd.conf
+}'
 
-if is_nodev $webdir
+if ! preinst
 then
-	cp /etc/fstab /etc/fstab.bk
-
-	# remove "nodev" from $webdir in /etc/fstab so that we can create /dev/null
-	# this requires a reboot to be effective
-	oldline=$(grep `fstab_parent $webdir` </etc/fstab)
-	newline=`echo "$oldline" | sed 's/nodev//' | sed 's/,,/,/'`
-	oldfile=`cat /etc/fstab`
-	echo "$oldfile" | sed "s!$oldline!$newline!" >/etc/fstab
-	echo "$0: /etc/fstab has been changed, a reboot is required at the end of the setup process"
+	echo "$0: could not complete pre-installation checks" >&2
+	exit 1
 fi
 
-# create devices in $webdir
-mkdir -p "$webdir/dev"
-p=$(pwd)
-cd $webdir/dev
-/dev/MAKEDEV std
-cd $p
+if ! httpdconf
+then
+	echo "$0: could not configure httpd" >&2
+	exit 1
+fi
 
-# create /tmp in $webdir
-mkdir -p "$webdir/tmp"
-chmod 1777 "$webdir/tmp"
+if ! fstabconf
+then
+	echo "$0: could not configure /etc/fstab" >&2
+	exit 1
+fi
 
-# lncp required things into the chroot environment
-mkdir -p $webdir$p9pdir $webdir/usr/libexec $webdir/usr/lib $webdir/bin $webdir$p9pdir/lib
-lncp $p9pdir/rcmain $webdir$p9pdir
-lncp /usr/libexec/ld.so $webdir/usr/libexec
-lncp /usr/lib/lib{m,util,pthread,c,z,expat}.so* $webdir/usr/lib
-lncp /bin/{pwd,mv} $webdir/bin
-lncp $p9pdir/lib/fortunes $webdir$p9pdir/lib
+if ! inst
+then
+	echo "$0: could not install werc" >&2
+	exit 1
+fi
 
-# recursively lncp everyting (including sub-dirs) under $p9pdir/bin into the chroot environment
-allbins="$(find $p9pdir/bin -not -type d | sed "s|^$p9pdir/bin/||")"
-for bin in $allbins
-do
-	dir=$(dirname $bin)
-	mkdir -p $webdir/bin/$dir
-	lncp $p9pdir/bin/$bin $webdir/bin/$bin
-done
+if ! mkweb
+then
+	echo "$0: could not add files and directories to $webdir" >&2
+	exit 1
+fi
 
-# enable slowcgi and httpd
-rcctl enable slowcgi httpd
+if ! services
+then
+	echo "$0: could not enable required services" >&2
+	exit 1
+fi
 
 echo
 echo "$0: setup completed!"
