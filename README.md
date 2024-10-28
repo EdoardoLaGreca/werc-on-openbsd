@@ -2,11 +2,20 @@
 
 Automate [Werc](http://werc.cat-v.org/) setup on [OpenBSD](https://www.openbsd.org/).
 
-Both the `setup.sh` and `unsetup.sh` scripts (in their current version) have been successfully tested on OpenBSD 7.5. Prior or later versions of OpenBSD may not work.
+## Useful info
 
-**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the plan9port package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a plan9port update, and to reinstall Werc (using the two scripts) when it stops working.
+Both the `setup.sh` and `unsetup.sh` scripts, in their latest available version, have been successfully tested on OpenBSD 7.5. Prior or later versions of OpenBSD may not work.
 
-To preserve the original config files that are going to be modified, the setup script makes a copy (backup) of them and adds `.bk` at the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure to NOT have `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem.**
+A [tagged commit](https://git-scm.com/book/en/v2/Git-Basics-Tagging), whose tag name is in the form `vN.M` with `N` and `M` integers, is a commit whose working tree has the following characteristics:
+
+1. It has a readable README which is carefully divided into sections and contains instructions about the usage of the two scripts. The README file may also contain checksums for the two scripts.
+2. It has the two scripts, `setup.sh` and `unsetup.sh`, tested against the latest OpenBSD stable version (available at that point in time) with positive outcome and no known side effect on the system.
+
+Since the testing process is manual I may overlook some edge cases, sometimes on purpose and sometimes not. I care about the quality of my software but testing every single line against all its possible edge cases is really time consuming and unsustainable.
+
+**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the plan9port package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a plan9port update and to reinstall Werc (using the two scripts) in case it stops working.
+
+To preserve the original config files that are going to be modified, the setup script backs them up by adding `.bk` to the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure to NOT have files named `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem.**
 
 ## Rationale and Details
 
@@ -27,7 +36,7 @@ In addition to all I said before, and this was by far the hardest goal to achiev
 
 ## Usage
 
-The following procedure downloads scripts using the latest release tag, which has been tested before publication. The latest tag shown in the URL below is manually updated, please check that it matches the actual latest release before proceeding. It is not recommended (at all) to run scripts from the `main` branch.
+The following procedure downloads scripts using the latest release tag. The latest tag shown in the URL below is manually updated, please check that it matches the actual latest release before proceeding. It is not recommended (at all) to run scripts from the `main` branch.
 
 The following procedure refers to the setup script (`setup.sh`). For the un-setup script (`unsetup.sh`), the procedure is the same except for the script name.
 
@@ -40,7 +49,7 @@ The procedure is as follows, written both in human-readable steps and as command
 5. Start the script as root.
 
 ```sh
-ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v1.2/script.sh
+ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v1.2/setup.sh
 sha256 -q setup.sh
 vi setup.sh	# change domain and webdir
 chmod 744 setup.sh
