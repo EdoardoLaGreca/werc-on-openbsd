@@ -165,6 +165,48 @@ services() {
 
 # ---- end parts ----
 
+all() {
+	if ! preinst
+	then
+		echo "$0: could not complete pre-installation checks" >&2
+		exit 1
+	fi
+
+	if ! httpdconf
+	then
+		echo "$0: could not configure httpd" >&2
+		exit 1
+	fi
+
+	if ! fstabconf
+	then
+		echo "$0: could not configure /etc/fstab" >&2
+		exit 1
+	fi
+
+	if ! inst
+	then
+		echo "$0: could not install werc" >&2
+		exit 1
+	fi
+
+	if ! mkweb
+	then
+		echo "$0: could not add files and directories to $webdir" >&2
+		exit 1
+	fi
+
+	if ! services
+	then
+		echo "$0: could not enable required services" >&2
+		exit 1
+	fi
+
+	echo
+	echo "$0: setup completed!"
+	echo "$0: check prior messages to see if you need to reboot; otherwise, you can start the httpd and slowcgi services"
+}
+
 # default values if unset or empty
 domain=${domain:-"example.com"}
 webdir=${webdir:-"/var/www"}
@@ -202,42 +244,12 @@ types {
 	include "/usr/share/misc/mime.types"
 }'
 
-if ! preinst
+if [ $# -ne 0 ]
 then
-	echo "$0: could not complete pre-installation checks" >&2
-	exit 1
+	for f in $@
+	do
+		f
+	done
+else
+	all
 fi
-
-if ! httpdconf
-then
-	echo "$0: could not configure httpd" >&2
-	exit 1
-fi
-
-if ! fstabconf
-then
-	echo "$0: could not configure /etc/fstab" >&2
-	exit 1
-fi
-
-if ! inst
-then
-	echo "$0: could not install werc" >&2
-	exit 1
-fi
-
-if ! mkweb
-then
-	echo "$0: could not add files and directories to $webdir" >&2
-	exit 1
-fi
-
-if ! services
-then
-	echo "$0: could not enable required services" >&2
-	exit 1
-fi
-
-echo
-echo "$0: setup completed!"
-echo "$0: check prior messages to see if you need to reboot; otherwise, you can start the httpd and slowcgi services"

@@ -97,6 +97,42 @@ services() {
 
 # ---- end parts ----
 
+all() {
+	if ! preuninst
+	then
+		echo "$0: could not complete pre-installation checks" >&2
+		exit 1
+	fi
+
+	if ! uninst
+	then
+		echo "$0: could not uninstall werc" >&2
+		exit 1
+	fi
+
+	if ! restore
+	then
+		echo "$0: could not restore backed up files" >&2
+		exit 1
+	fi
+
+	if ! rmpkgs
+	then
+		echo "$0: could not remove packages" >&2
+		exit 1
+	fi
+
+	if ! services
+	then
+		echo "$0: could not remove services" >&2
+		exit 1
+	fi
+
+	echo
+	echo "$0: the unsetup operation was successful"
+	echo "$0: the content of your site ($siteroot) has not been removed"
+}
+
 # default values if unset or empty
 webdir=${webdir:-"/var/www"}
 domain=${domain:-"example.com"}
@@ -105,36 +141,13 @@ domain=${domain:-"example.com"}
 p9pdir='/usr/local/plan9'
 siteroot="$webdir/werc/sites/$domain"
 
-if ! preuninst
-then
-	echo "$0: could not complete pre-installation checks" >&2
-	exit 1
-fi
 
-if ! uninst
+if [ $# -ne 0 ]
 then
-	echo "$0: could not uninstall werc" >&2
-	exit 1
+	for f in $@
+	do
+		f
+	done
+else
+	all
 fi
-
-if ! restore
-then
-	echo "$0: could not restore backed up files" >&2
-	exit 1
-fi
-
-if ! rmpkgs
-then
-	echo "$0: could not remove packages" >&2
-	exit 1
-fi
-
-if ! services
-then
-	echo "$0: could not remove services" >&2
-	exit 1
-fi
-
-echo
-echo "$0: the unsetup operation was successful"
-echo "$0: the content of your site ($siteroot) has not been removed"
