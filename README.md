@@ -56,12 +56,22 @@ chmod 744 setup.sh
 doas ./setup.sh
 ```
 
+### Running parts
+
+Instead of running the entire script, one might want to run just one or some parts to, for example, debug the script or run again a part which could not terminate successfully. To do so is as simple as passing the function names to the script as arguments. An example is shown below.
+
+```sh
+./setup.sh preinst inst
+```
+
+Although the example above uses `setup.sh`, `unsetup.sh` also behaves in this way.
+
 ## Checksums
 
 ### `setup.sh`
 
-SHA-256: `b93606b19719b6ff5eec3608363fb3fe885f9024d2e1ab2b6d1f75456bfb96c9`
+SHA-256: ``
 
 ### `unsetup.sh`
 
-SHA-256: `7f772c44df9fef261f851fdc91fb454d446f7631ea65f600ef204a758dfc3715`
+SHA-256: ``
