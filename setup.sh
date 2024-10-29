@@ -21,14 +21,15 @@ webdir='/var/www'
 
 # ---- functions ----
 
-# check if a directory (or one of the parents of that directory) is an fstab entry marked as "nodev"
+# check whether the drive that holds a given directory is marked as "nodev"
 # directories marked as "nodev" cannot contain special devices (e.g. /dev/null)
 is_nodev() {
 	dir="$1"
 
-	fstab_dir=`fstab_parent $dir`
+	# fstab dir that contains (or is) $dir
+	fsdir=$(drivepath $dir)
 
-	if echo $fstab_dir | grep -E ',?nodev,?' >/dev/null
+	if grep "[[:space:]]$fsdir[[:space:]]" </etc/fstab | grep -E '(,|[[:space:]])nodev(,|[[:space:]])' >/dev/null
 	then
 		return 0
 	fi
@@ -36,17 +37,20 @@ is_nodev() {
 	return 1
 }
 
-# extract the directory from an /etc/fstab entry which contains a directory or one of its parents
-fstab_parent() {
+# find the innermost path which contains the given directory from /etc/fstab entries
+drivepath() {
 	dir="$1"
 
-	for entry in `awk '{ print $2 }' </etc/fstab`
+	fspaths=$(awk '{ print $2 }' </etc/fstab)
+	while :
 	do
-		echo $dir | grep -E "^$entry(/|$)" >/dev/null
-		test $? -eq 0 && return 0
+		echo $fspaths | grep "^$dir$" >/dev/null
+		test $? -eq 0 && break
+		test $dir = '/' && return 1	# avoid infinite loop
+		dir=$(dirname $dir)
 	done
 
-	return 1
+	echo $dir
 }
 
 # acts like ln if possible, otherwise cp
@@ -104,8 +108,8 @@ fstabconf() {
 		# remove "nodev" from $webdir in /etc/fstab so that we can create /dev/null
 		# this requires a reboot to be effective
 		oldline=$(grep `fstab_parent $webdir` </etc/fstab)
-		newline=`echo "$oldline" | sed 's/nodev//' | sed 's/,,/,/'`
-		oldfile=`cat /etc/fstab`
+		newline=$(echo "$oldline" | sed 's/nodev//' | sed 's/,,/,/')
+		oldfile=$(cat /etc/fstab)
 		echo "$oldfile" | sed "s!$oldline!$newline!" >/etc/fstab
 		echo "$0: /etc/fstab has been changed, a reboot is required at the end of the setup process"
 	fi
