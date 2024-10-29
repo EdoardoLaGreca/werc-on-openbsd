@@ -250,7 +250,7 @@ types {
 
 if [ $# -ne 0 ]
 then
-	for f in $@
+	for f
 	do
 		f
 	done
