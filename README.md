@@ -56,6 +56,8 @@ chmod 744 setup.sh
 doas ./setup.sh
 ```
 
+The `setup.sh` script does not automatically start `httpd` and `slowcgi`. It behaves like that for two reasons: firstly you might want to make some final changes to your website before displaying it publicly and secondly you may have to reboot your system before starting the webserver if `/etc/fstab` has been changed by the script. The script should display a log message if you need to reboot (and/or `/etc/fstab` has been changed). The absence of such message in the log means that rebooting is not necessary. This does not apply to `unsetup.sh`.
+
 ### Running parts
 
 Instead of running the entire script, one might want to run just one or some parts to, for example, debug the script or run again a part which could not terminate successfully. To do so is as simple as passing the function names to the script as arguments. An example is shown below.
