@@ -126,8 +126,10 @@ inst() {
 
 	# default siteroot contents
 	mkdir $siteroot
-	mkdir $siteroot/_werc
-	cp -R $webdir/werc/lib $siteroot/_werc
+	mkdir -p $siteroot/_werc/{lib,pub}
+	printf "masterSite=$domain\nsiteTitle='title'\nsiteSubTitle='subtitle'\n" >$siteroot/_werc/config
+	cp $webdir/werc/lib/{default_master.tpl,footer.inc,top_bar.inc} $siteroot/_werc/lib
+	cp $webdir/werc/pub/style.css $siteroot/_werc/pub
 	printf "# congratulations\n\nit works! :)\n" >$siteroot/index.md
 }
 
