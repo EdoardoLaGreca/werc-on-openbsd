@@ -27,9 +27,9 @@ is_nodev() {
 	dir="$1"
 
 	# fstab dir that contains (or is) $dir
-	fsdir=$(drivepath $dir)
+	mntp=$(mountp $dir)
 
-	if grep "[[:space:]]$fsdir[[:space:]]" </etc/fstab | grep -E '(,|[[:space:]])nodev(,|[[:space:]])' >/dev/null
+	if grep "[[:space:]]$mntp[[:space:]]" </etc/fstab | grep -E '(,|[[:space:]])nodev(,|[[:space:]])' >/dev/null
 	then
 		return 0
 	fi
@@ -37,14 +37,14 @@ is_nodev() {
 	return 1
 }
 
-# find the innermost path which contains the given directory from /etc/fstab entries
-drivepath() {
+# find the innermost mount point which contains the given directory from /etc/fstab entries
+mountp() {
 	dir="$1"
 
-	fspaths=$(awk '{ print $2 }' </etc/fstab)
+	mntps=$(awk '{ print $2 }' </etc/fstab)
 	while :
 	do
-		echo $fspaths | grep "^$dir$" >/dev/null
+		echo "$mntps" | grep "^$dir$" >/dev/null
 		test $? -eq 0 && break
 		test $dir = '/' && return 1	# avoid infinite loop
 		dir=$(dirname $dir)
@@ -105,13 +105,14 @@ fstabconf() {
 	then
 		cp /etc/fstab /etc/fstab.bk
 
-		# remove "nodev" from $webdir in /etc/fstab so that we can create /dev/null
+		# remove "nodev" from $webdir in /etc/fstab to make /dev/null
 		# this requires a reboot to be effective
-		oldline=$(grep `fstab_parent $webdir` </etc/fstab)
-		newline=$(echo "$oldline" | sed 's/nodev//' | sed 's/,,/,/')
+		mntp=$(mountp $webdir)
+		oldline=$(grep "[[:space:]]$mntp[[:space:]]" /etc/fstab)
+		newline=$(echo "$oldline" | sed 's/nodev//;s/,,/,/')
 		oldfile=$(cat /etc/fstab)
 		echo "$oldfile" | sed "s!$oldline!$newline!" >/etc/fstab
-		echo "$0: /etc/fstab has been changed, a reboot is required at the end of the setup process"
+		echo "$0: /etc/fstab has been changed, reboot when script terminates to apply"
 	fi
 }
 
