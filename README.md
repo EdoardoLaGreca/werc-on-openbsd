@@ -13,7 +13,7 @@ A [tagged commit](https://git-scm.com/book/en/v2/Git-Basics-Tagging), whose tag 
 
 Since the testing process is manual I may overlook some edge cases, sometimes on purpose and sometimes not. I care about the quality of my software but testing every single line against all its possible edge cases is really time consuming and unsustainable.
 
-**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the plan9port package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a plan9port update and to reinstall Werc (using the two scripts) in case it stops working.
+**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the `plan9port` package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a `plan9port` update.
 
 To preserve the original config files that are going to be modified, the setup script backs them up by adding `.bk` to the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure to NOT have files named `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem.**
 
@@ -67,6 +67,21 @@ Instead of running the entire script, one might want to run just one or some par
 ```
 
 Although the example above uses `setup.sh`, `unsetup.sh` also behaves in this way.
+
+## Troubleshooting
+
+### Werc stops working after upgrading OpenBSD or updating plan9port
+
+It may happen that, after upgrading OpenBSD or updating the `plan9port` package, your website stops working and only shows "500 internal server error".
+
+I don't know the reason, if I'm being honest. However, I found out that removing all the contents of the `plan9port` package from the webserver's directory and then placing them there again solves the error. Uninstalling and re-installing everything would work, although this solution is a waste of time, especially on slower machines, and could potentially have some side effects (in other words, it is not guaranteed not to have them).
+
+The proper way to solve this issue is by using the following commands.
+
+```
+doas ./unsetup.sh rmweb
+doas ./setup.sh mkweb
+```
 
 ## Checksums
 
