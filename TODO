@@ -1,2 +1,0 @@
-- a function in setup.sh that allows to update the chrooted plan9port installation after a sysupgrade or a package upgrade (500 internal server error otherwise)
-
