@@ -42,9 +42,13 @@ preuninst() {
 	fi
 }
 
-uninst() {
+rmweb() {
 	# remove hard links, copies, devices
 	rm -fr $webdir/dev $webdir/tmp $webdir$p9pdir $webdir/usr $webdir/bin
+}
+
+uninst() {
+	ls -1 $webdir/werc/ | grep -v '^sites$' | xargs -I {} rm -r {}
 }
 
 restore() {
@@ -102,6 +106,11 @@ all() {
 	then
 		echo "$0: could not complete pre-installation checks" >&2
 		exit 1
+	fi
+
+	if ! rmweb
+	then
+		echo "$0: could not remove the contents of $webdir" >&2
 	fi
 
 	if ! uninst
