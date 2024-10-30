@@ -146,7 +146,7 @@ if [ $# -ne 0 ]
 then
 	for f
 	do
-		f
+		$f
 	done
 else
 	all
