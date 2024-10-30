@@ -120,18 +120,31 @@ fstabconf() {
 inst() {
 	pkg_add bzip2 plan9port || return 1
 
+	if [ -d $siteroot ]
+	then
+		# werc has been uninstalled and it is being re-installed again
+		mv $siteroot .
+		reinst=yes
+		echo "$0: existing site root detected ($siteroot), skipping creation..."
+	fi
+
 	ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2 || return 1
 	tar xjf tip.tar.bz2 -C $webdir
 	rm tip.tar.bz2
 	mv $webdir/werc-* $webdir/werc
 
-	# default siteroot contents
-	mkdir $siteroot
-	mkdir -p $siteroot/_werc/{lib,pub,pub/style}
-	printf "masterSite=$domain\nsiteTitle='title'\nsiteSubTitle='subtitle'\n" >$siteroot/_werc/config
-	cp $webdir/werc/lib/{default_master.tpl,footer.inc,top_bar.inc} $siteroot/_werc/lib
-	cp $webdir/werc/pub/style/style.css $siteroot/_werc/pub/style
-	printf "# congratulations\n\nit works! :)\n" >$siteroot/index.md
+	if [ $reinst = yes ]
+	then
+		mv $(basename $siteroot) $(dirname $siteroot)
+	else
+		# default siteroot contents
+		mkdir $siteroot
+		mkdir -p $siteroot/_werc/{lib,pub,pub/style}
+		printf "masterSite=$domain\nsiteTitle='title'\nsiteSubTitle='subtitle'\n" >$siteroot/_werc/config
+		cp $webdir/werc/lib/{default_master.tpl,footer.inc,top_bar.inc} $siteroot/_werc/lib
+		cp $webdir/werc/pub/style/style.css $siteroot/_werc/pub/style
+		printf "# congratulations\n\nit works! :)\n" >$siteroot/index.md
+	fi
 }
 
 # pour files and directories into $webdir
