@@ -74,7 +74,7 @@ Although the example above uses `setup.sh`, `unsetup.sh` also behaves in this wa
 
 It may happen that, after upgrading OpenBSD or updating the `plan9port` package, your website stops working and only shows "500 internal server error".
 
-I don't know the reason, if I'm being honest. However, I found out that removing all the contents of the `plan9port` package from the webserver's directory and then placing them there again solves the error. Uninstalling and re-installing everything would work, although this solution is a waste of time, especially on slower machines, and could potentially have some side effects (in other words, it is not guaranteed not to have them).
+I don't know the reason, if I'm being honest. However, I found out that removing all the contents of the `plan9port` package from the webserver's directory and then placing them there again solves the error. Uninstalling and re-installing everything would work, although this solution is a waste of time, especially on slower machines, and could potentially have some side effects (it is not guaranteed not to have them).
 
 The proper way to solve this issue is by using the following commands.
 
