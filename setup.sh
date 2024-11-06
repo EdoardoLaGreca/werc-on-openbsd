@@ -133,7 +133,7 @@ inst() {
 	rm tip.tar.bz2
 	mv $webdir/werc-* $webdir/werc
 
-	if [ $reinst = yes ]
+	if [ "$reinst" = yes ]
 	then
 		mv $(basename $siteroot) $(dirname $siteroot)
 	else
