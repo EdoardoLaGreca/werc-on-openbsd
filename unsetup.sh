@@ -108,7 +108,7 @@ all() {
 		exit 1
 	fi
 
-	if ! rmweb
+	if ! rm9env
 	then
 		echo "$0: could not remove the contents of $webdir" >&2
 	fi

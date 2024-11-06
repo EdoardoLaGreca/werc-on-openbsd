@@ -199,7 +199,7 @@ all() {
 		exit 1
 	fi
 
-	if ! mkweb
+	if ! mk9env
 	then
 		echo "$0: could not add files and directories to $webdir" >&2
 		exit 1
