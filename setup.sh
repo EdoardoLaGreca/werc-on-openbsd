@@ -224,7 +224,7 @@ all() {
 
 	echo
 	echo "$0: setup completed!"
-	echo "$0: check prior messages to see if you need to reboot; otherwise, you can start the httpd and slowcgi services"
+	echo "$0: you may need to reboot (see prior messages); otherwise, you can start httpd and slowcgi"
 }
 
 # default values if unset or empty
