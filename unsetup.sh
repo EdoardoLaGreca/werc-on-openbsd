@@ -44,7 +44,7 @@ preuninst() {
 
 rmweb() {
 	# remove hard links, copies, devices
-	rm -fr $webdir/dev $webdir/tmp $webdir$p9pdir $webdir/usr $webdir/bin
+	rm -fr $webdir/{dev,tmp,usr,bin,$p9pdir}
 }
 
 uninst() {
