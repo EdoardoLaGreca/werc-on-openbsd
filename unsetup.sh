@@ -48,7 +48,7 @@ rmweb() {
 }
 
 uninst() {
-	ls -1 $webdir/werc/ | grep -v '^sites$' | xargs -I {} rm -r {}
+	ls -1 $webdir/werc/ | grep -v '^sites$' | xargs -I {} rm -r $webdir/werc/{}
 }
 
 restore() {
