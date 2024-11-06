@@ -79,8 +79,8 @@ I don't know the reason, if I'm being honest. However, I found out that removing
 The proper way to solve this issue is by using the following commands.
 
 ```
-doas ./unsetup.sh rmweb
-doas ./setup.sh mkweb
+doas ./unsetup.sh rm9env
+doas ./setup.sh mk9env
 ```
 
 ## Checksums
