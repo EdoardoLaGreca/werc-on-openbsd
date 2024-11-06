@@ -118,7 +118,7 @@ fstabconf() {
 
 # werc installation
 inst() {
-	pkg_add bzip2 plan9port || return 1
+	pkg_add bzip2 || return 1
 
 	if [ -d $siteroot ]
 	then
@@ -147,35 +147,24 @@ inst() {
 	fi
 }
 
-# pour files and directories into $webdir
-mkweb() {
+# make the plan 9 environment in the new root
+mk9env() {
+	pkg_add git || return 1
+	git clone https://github.com/9fans/plan9port $webdir$p9pdir || return 1
+	( cd $webdir$p9pdir ; ./INSTALL -r $p9pdir ) || return 1
+
 	# create devices
-	mkdir -p "$webdir/dev"
-	p=$(pwd)
-	cd $webdir/dev
-	/dev/MAKEDEV std
-	cd $p
+	mkdir $webdir/dev
+	( cd $webdir/dev ; /dev/MAKEDEV std )
 
 	# create /tmp in $webdir
-	mkdir -p "$webdir/tmp"
-	chmod 1777 "$webdir/tmp"
+	mkdir $webdir/tmp
+	chmod 1777 $webdir/tmp
 
 	# lncp required things into the chroot environment
-	mkdir -p $webdir$p9pdir $webdir/usr/libexec $webdir/usr/lib $webdir/bin $webdir$p9pdir/lib
-	lncp $p9pdir/rcmain $webdir$p9pdir
-	lncp /usr/libexec/ld.so $webdir/usr/libexec
+	mkdir -p $webdir/usr/{lib,libexec}
 	lncp /usr/lib/lib{m,util,pthread,c,z,expat}.so* $webdir/usr/lib
-	lncp /bin/{pwd,mv} $webdir/bin
-	lncp $p9pdir/lib/fortunes $webdir$p9pdir/lib
-
-	# recursively lncp everyting (including sub-dirs) under $p9pdir/bin into the chroot environment
-	allbins="$(find $p9pdir/bin -not -type d | sed "s|^$p9pdir/bin/||")"
-	for bin in $allbins
-	do
-		dir=$(dirname $bin)
-		mkdir -p $webdir/bin/$dir
-		lncp $p9pdir/bin/$bin $webdir/bin/$bin
-	done
+	lncp /usr/libexec/ld.so $webdir/usr/libexec
 }
 
 services() {
@@ -232,7 +221,7 @@ domain=${domain:-"example.com"}
 webdir=${webdir:-"/var/www"}
 
 # other useful variables
-p9pdir='/usr/local/plan9'
+p9pdir='/plan9'	# after chroot, full is $webdir$p9pdir
 siteroot="$webdir/werc/sites/$domain"
 httpdconffile='server "'$domain'" {
 
@@ -252,6 +241,7 @@ httpdconffile='server "'$domain'" {
 	location not found "/*" {
 		root "/"
 		fastcgi {
+			param PATH "/plan9/bin"
 			param PLAN9 "'$p9pdir'"
 			param DOCUMENT_ROOT "/werc/bin"
 			param SCRIPT_FILENAME "/werc/bin/werc.rc"

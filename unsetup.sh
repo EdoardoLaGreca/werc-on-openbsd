@@ -42,9 +42,9 @@ preuninst() {
 	fi
 }
 
-rmweb() {
+rm9env() {
 	# remove hard links, copies, devices
-	rm -fr $webdir/{dev,tmp,usr,bin,$p9pdir}
+	rm -fr $webdir/{$p9pdir,dev,tmp,usr}
 }
 
 uninst() {
@@ -61,11 +61,11 @@ restore() {
 rmpkgs() {
 	while true
 	do
-		echo -n "remove bzip2 and plan9port packages? (y/n) "
+		echo -n "remove bzip2 and git packages? (y/n) "
 		read yn
 		case $yn in
 			[Yy]* )
-				pkg_delete bzip2 plan9port
+				pkg_delete bzip2 git
 				break
 				;;
 			[Nn]* )
@@ -147,7 +147,7 @@ webdir=${webdir:-"/var/www"}
 domain=${domain:-"example.com"}
 
 # other useful variables
-p9pdir='/usr/local/plan9'
+p9pdir='/plan9'	# after chroot, full is $webdir$p9pdir
 siteroot="$webdir/werc/sites/$domain"
 
 
