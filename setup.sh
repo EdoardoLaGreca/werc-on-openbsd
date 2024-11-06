@@ -72,7 +72,7 @@ preinst() {
 
 	if [ $(whoami) != "root" ]
 	then
-		echo "$0: not running as root user" >&2
+		echo "$0: root user required" >&2
 		return 1
 	fi
 
@@ -125,7 +125,7 @@ inst() {
 		# werc has been uninstalled and it is being re-installed again
 		mv $siteroot .
 		reinst=yes
-		echo "$0: existing site root detected ($siteroot), skipping creation..."
+		echo "$0: existing site root detected ($siteroot), will not overwrite"
 	fi
 
 	ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2 || return 1
