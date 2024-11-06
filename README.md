@@ -13,9 +13,9 @@ A [tagged commit](https://git-scm.com/book/en/v2/Git-Basics-Tagging), whose tag 
 
 Since the testing process is manual I may overlook some edge cases, sometimes on purpose and sometimes not. I care about the quality of my software but testing every single line against all its possible edge cases is really time consuming and unsustainable.
 
-**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the `plan9port` package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a `plan9port` update.
+**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the `plan9port` package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a `plan9port` update. If it stops working, head to [Troubleshooting](troubleshooting).
 
-To preserve the original config files that are going to be modified, the setup script backs them up by adding `.bk` to the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure to NOT have files named `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem.**
+To preserve the original config files that are going to be modified, the setup script backs them up by adding `.bk` to the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure to NOT have files named `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem**.
 
 ## Rationale and Details
 
