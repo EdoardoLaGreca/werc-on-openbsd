@@ -17,8 +17,6 @@ Since the testing process is manual I may overlook some edge cases, sometimes on
 
 **Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the `plan9port` package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a `plan9port` update. If it stops working, head to [Troubleshooting](#troubleshooting).
 
-To preserve the original config files that are going to be modified, the setup script backs them up by adding `.bk` to the end of their name. For example, the original `/etc/httpd.conf` file is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name. For this reason, **before running `setup.sh`, make sure to NOT have files named `/etc/httpd.conf.bk` or `/etc/fstab.bk` in your filesystem**.
-
 ## Rationale and Details
 
 [Werc](http://werc.cat-v.org/), defined as a "sane web anti-framework", is a set of [CGI](https://en.wikipedia.org/wiki/Common_Gateway_Interface) scripts that take markdown files and HTML templates and spit out a complete HTML page. It is simple (highly functional core is 150 lines), easily extensible, and fast enough.
@@ -39,6 +37,17 @@ In addition to all I said before, and this was by far the hardest goal to achiev
 The final solution, introduced in [v1.3](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v1.3), is to clone plan9port's git repository into the `chroot`'ed filesystem and install it there, with its hard-coded paths adjusted through the `-r` option. Not only this improves the system's security, since patches can be applied immedately, but it also eliminates the need of work-arounds to make hard-coded paths work.
 
 ## Usage
+
+### Pre-usage checklist
+
+**Note**: To preserve the original config files that are going to be modified, the setup script backs them up by adding `.bk` to the end of their name. For example, the original content of `/etc/httpd.conf` is copied to `/etc/httpd.conf.bk`. To restore the original files, the unsetup script renames the backup files with their original name, replacing the changed version.
+
+In the following list, `$webdir` and `$p9pdir` respectively refer to `httpd`'s web content directory, by default `/var/www`, and plan9port's installation directory with `$webdir` as root, by default `/plan9`.
+
+- Do the files `/etc/httpd.conf.bk` and `/etc/fstab.bk` already exist in your machine's file system? If so, `setup.sh` is going to overwrite them, consider renaming or removing them.
+- Did you add or change files in `$webdir` which cannot be lost? The setup script creates new files in `$webdir` which may overwrite existing ones while the unsetup script removes some directories which may delete those files. Consider moving important files out of `$webdir` or placing them in directories which will not be removed.
+
+### Actual usage
 
 The following procedure downloads scripts using the latest release tag. The latest tag shown in the URL below is manually updated, please check that it matches the actual latest release before proceeding. It is not recommended (at all) to run scripts from the `main` branch.
 
