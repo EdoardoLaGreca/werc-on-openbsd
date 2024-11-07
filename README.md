@@ -8,14 +8,20 @@ Automate [Werc](http://werc.cat-v.org/) setup on [OpenBSD](https://www.openbsd.o
 Both the `setup.sh` and `unsetup.sh` scripts, in their latest available version ([v1.3](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v1.3)), have been successfully tested on the latest available OpenBSD stable release (7.6). Prior or later versions of OpenBSD may not work.
 -->
 
+**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the `plan9port` package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a `plan9port` update. If it stops working, head to [Troubleshooting](#troubleshooting).
+
+### Limitations
+
+For now, the installation (resulting from `setup.sh`) has only been tested with `GET` requests, which it supports for sure. Other types of HTTP requests may or may not work. The URL-based rules in `/etc/httpd.conf` may need a different configuration to support other HTTP requests as well.
+
+### Other info
+
 A [tagged commit](https://git-scm.com/book/en/v2/Git-Basics-Tagging) with tag name of the form `vN.M` (where `N` and `M` are integers), is a commit whose working tree has the following characteristics:
 
 1. It has a readable README which is carefully divided into sections and contains instructions about the usage of the two scripts. The README file may also contain checksums for the two scripts.
 2. It has the two scripts, `setup.sh` and `unsetup.sh`, tested against the latest OpenBSD stable version (available at that point in time) with positive outcome and no known side effect on the system.
 
 Since the testing process is manual I may overlook some edge cases, sometimes on purpose and sometimes not. I care about the quality of my software but testing every single line against all its possible edge cases is really time consuming and unsustainable.
-
-**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the `plan9port` package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a `plan9port` update. If it stops working, head to [Troubleshooting](#troubleshooting).
 
 ## Rationale and Details
 
