@@ -149,9 +149,14 @@ inst() {
 
 # make the plan 9 environment in the new root
 mk9env() {
+	# install plan9port in $webdir
 	pkg_add git || return 1
 	git clone https://github.com/9fans/plan9port $webdir$p9pdir || return 1
 	( cd $webdir$p9pdir ; ./INSTALL -r $p9pdir ) || return 1
+
+	# some programs need to be in $webdir/bin or are missing at all
+	mkdir -p $webdir/bin
+	cp /bin/{pwd,mv} $webdir$p9pdir/bin/{rc,echo} $webdir/bin
 
 	# create devices
 	mkdir $webdir/dev
@@ -241,7 +246,7 @@ httpdconffile='server "'$domain'" {
 	location not found "/*" {
 		root "/"
 		fastcgi {
-			param PATH "/plan9/bin"
+			param PATH "/bin:/plan9/bin"
 			param PLAN9 "'$p9pdir'"
 			param DOCUMENT_ROOT "/werc/bin"
 			param SCRIPT_FILENAME "/werc/bin/werc.rc"
