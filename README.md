@@ -4,7 +4,9 @@ Automate [Werc](http://werc.cat-v.org/) setup on [OpenBSD](https://www.openbsd.o
 
 ## Useful info
 
-Both the `setup.sh` and `unsetup.sh` scripts, in their latest available version, have been successfully tested on OpenBSD 7.5. Prior or later versions of OpenBSD may not work.
+<!--
+Both the `setup.sh` and `unsetup.sh` scripts, in their latest available version ([v1.3](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v1.3)), have been successfully tested on the latest available OpenBSD release (7.6). Prior or later versions of OpenBSD may not work.
+-->
 
 A [tagged commit](https://git-scm.com/book/en/v2/Git-Basics-Tagging), whose tag name is in the form `vN.M` with `N` and `M` integers, is a commit whose working tree has the following characteristics:
 
