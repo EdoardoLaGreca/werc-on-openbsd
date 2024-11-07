@@ -44,8 +44,9 @@ The final solution, introduced in [v1.3](https://github.com/EdoardoLaGreca/werc-
 
 In the following list, `$webdir` and `$p9pdir` respectively refer to `httpd`'s web content directory, by default `/var/www`, and plan9port's installation directory with `$webdir` as root, by default `/plan9`.
 
-- Do the files `/etc/httpd.conf.bk` and `/etc/fstab.bk` already exist in your machine's file system? If so, `setup.sh` is going to overwrite them, consider renaming or removing them.
-- Did you add or change files in `$webdir` which cannot be lost? The setup script creates new files in `$webdir` which may overwrite existing ones while the unsetup script removes some directories which may delete those files. Consider moving important files out of `$webdir` or placing them in directories which will not be removed.
+- **Do the files `/etc/httpd.conf.bk` and `/etc/fstab.bk` already exist in your machine's file system?** If so, `setup.sh` will overwrite them, consider renaming or removing them.
+- **Did you add or change files in `$webdir` which cannot be lost?** The setup script creates new files in `$webdir` which may overwrite existing ones while the unsetup script removes some directories which may delete those files. Consider moving important files out of `$webdir` or placing them in directories which will not be removed.
+- **Did you make a backup of your machine?** The setup script may fail to complete, for example due to a network error. This leads to an incomplete installation and neither running `setup.sh` again, nor running `unsetup.sh`, is going to repair it. Depending on which command(s) failed and the type of error, you may be able to manually repair the installation by yourself. However, this is not always the case and it's an error-prone procedure, so it's discouraged.
 
 ### Actual usage
 
