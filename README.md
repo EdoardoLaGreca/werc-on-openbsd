@@ -87,12 +87,8 @@ doas ./unsetup.sh rm9env
 doas ./setup.sh mk9env
 ```
 
-## Checksums
+## Checksums (v1.3)
 
-### `setup.sh`
+`setup.sh` SHA-256: ``
 
-SHA-256: ``
-
-### `unsetup.sh`
-
-SHA-256: ``
+`unsetup.sh` SHA-256: ``
