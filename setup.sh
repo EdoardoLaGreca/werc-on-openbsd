@@ -156,7 +156,7 @@ mk9env() {
 
 	# some programs need to be in $webdir/bin or are missing at all
 	mkdir -p $webdir/bin
-	cp /bin/{pwd,mv} $webdir$p9pdir/bin/{rc,echo} $webdir/bin
+	lncp /bin/{pwd,mv} $webdir$p9pdir/bin/{rc,echo} $webdir/bin
 
 	# create devices
 	mkdir $webdir/dev
