@@ -157,15 +157,16 @@ mk9env() {
 	git clone https://github.com/9fans/plan9port $webdir$p9pdir || return 1
 	( cd $webdir$p9pdir ; ./INSTALL -r $p9pdir ) || return 1
 
-	# some programs need to be in $webdir/bin or are missing at all
-	mkdir -p $webdir/bin
-	lncp /bin/{pwd,mv} $webdir$p9pdir/bin/{rc,echo} $webdir/bin
+	# all programs need to be in $webdir/bin and some are missing
+	rm -f $webdir/bin
+	lncp $webdir$p9pdir/bin $webdir/bin
+	lncp /bin/{pwd,mv} $webdir/bin
 
 	# create devices
 	mkdir $webdir/dev
 	( cd $webdir/dev ; /dev/MAKEDEV std )
 
-	# create /tmp in $webdir
+	# create /tmp with permissions accepted by werc
 	mkdir $webdir/tmp
 	chmod 1777 $webdir/tmp
 
@@ -176,7 +177,6 @@ mk9env() {
 }
 
 services() {
-	# enable slowcgi and httpd
 	rcctl enable slowcgi httpd
 }
 
@@ -249,7 +249,7 @@ httpdconffile='server "'$domain'" {
 	location not found "/*" {
 		root "/"
 		fastcgi {
-			param PATH "/bin:/plan9/bin"
+			param PATH "/bin"
 			param PLAN9 "'$p9pdir'"
 			param DOCUMENT_ROOT "/werc/bin"
 			param SCRIPT_FILENAME "/werc/bin/werc.rc"
