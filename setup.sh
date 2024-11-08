@@ -55,7 +55,10 @@ mountp() {
 
 # acts like ln if possible, otherwise cp
 lncp() {
-	ln "$@" 2>/dev/null || cp "$@"
+	for f
+	do
+		ln "$f" 2>/dev/null || cp "$f"
+	done
 }
 
 # ---- end functions ----
