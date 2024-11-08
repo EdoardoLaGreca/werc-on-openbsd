@@ -93,3 +93,7 @@ doas ./setup.sh mk9env
 `setup.sh` SHA-256: ``
 
 `unsetup.sh` SHA-256: ``
+
+## License
+
+Starting from [v1.3](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v1.3) the project is now licensed under the ISC license, instead of Creative Commons Zero. Most things don't change, except for giving users and contributors more rights.
