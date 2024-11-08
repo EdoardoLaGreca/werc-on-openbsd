@@ -54,10 +54,12 @@ mountp() {
 }
 
 # acts like ln if possible, otherwise cp
+# do NOT pass options like '-R'
 lncp() {
+	last=$(eval echo $"$#")
 	for f
 	do
-		ln "$f" 2>/dev/null || cp "$f"
+		ln "$f" "$last" 2>/dev/null || cp "$f" "$last"
 	done
 }
 
