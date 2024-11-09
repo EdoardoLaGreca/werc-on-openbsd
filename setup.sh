@@ -57,7 +57,8 @@ mountp() {
 # do NOT pass options like '-R'
 lncp() {
 	last=$(eval echo $"$#")
-	for f
+	rest=$(for arg in $(seq 1 $(($# - 1))); do eval echo $"$arg"; done)
+	for f in $rest
 	do
 		ln "$f" "$last" 2>/dev/null || cp "$f" "$last"
 	done
@@ -160,7 +161,7 @@ mk9env() {
 	( cd $webdir$p9pdir ; ./INSTALL -r $p9pdir ) || return 1
 
 	# all programs need to be in $webdir/bin and some are missing
-	rm -f $webdir/bin
+	rm -Rf $webdir/bin
 	mv $webdir$p9pdir/bin $webdir/bin
 	lncp /bin/{pwd,mv} $webdir/bin
 
