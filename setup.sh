@@ -131,6 +131,7 @@ inst() {
 	then
 		# werc has been uninstalled and it is being re-installed again
 		mv $siteroot .
+		rm -r $webdir/werc
 		reinst=yes
 		echo "$0: existing site root detected ($siteroot), will not overwrite"
 	fi
