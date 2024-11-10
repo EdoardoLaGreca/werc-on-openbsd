@@ -124,7 +124,8 @@ fstabconf() {
 
 # werc installation
 inst() {
-	pkg_add bzip2 || return 1
+	ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.gz || return 1
+	tar -xzf tip.tar.gz || return 1
 
 	if [ -d $siteroot ]
 	then
@@ -133,12 +134,8 @@ inst() {
 		reinst=yes
 		echo "$0: existing site root detected ($siteroot), will not overwrite"
 	fi
-
-	ftp -S dont http://code.9front.org/hg/werc/archive/tip.tar.bz2 || return 1
-	tar xjf tip.tar.bz2 -C $webdir
-	rm tip.tar.bz2
-	mv $webdir/werc-* $webdir/werc
-
+	mv werc-* $webdir/werc
+	rm tip.tar.gz
 	if [ "$reinst" = yes ]
 	then
 		mv $(basename $siteroot) $(dirname $siteroot)

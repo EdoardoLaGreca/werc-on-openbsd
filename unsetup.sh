@@ -62,11 +62,11 @@ restore() {
 rmpkgs() {
 	while true
 	do
-		echo -n "remove bzip2 and git packages? (y/n) "
+		echo -n "remove the git package? (y/n) "
 		read yn
 		case $yn in
 			[Yy]* )
-				pkg_delete bzip2 git
+				pkg_delete git
 				break
 				;;
 			[Nn]* )
