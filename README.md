@@ -1,18 +1,17 @@
-# werc-on-openbsd
+werc-on-openbsd
+===============
 
 Automate [Werc](http://werc.cat-v.org/) setup on [OpenBSD](https://www.openbsd.org/).
 
 ## Useful info
 
-<!--
-Both the `setup.sh` and `unsetup.sh` scripts, in their latest available version ([v1.3](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v1.3)), have been successfully tested on the latest available OpenBSD stable release (7.6). Prior or later versions of OpenBSD may not work.
--->
+Both the `setup.sh` and `unsetup.sh` scripts, in their latest available version ([v2.0](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v2.0)), have been successfully tested on the latest available OpenBSD stable release (7.6). Prior or later versions of OpenBSD may not work.
 
-**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) or updating the `plan9port` package may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade or a `plan9port` update. If it stops working, head to [Troubleshooting](#troubleshooting).
+**Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade, a Werc update, or a plan9port update. If it stops working, head to [Troubleshooting](#troubleshooting).
 
 ### Limitations
 
-For now, the installation (resulting from `setup.sh`) has only been tested with `GET` requests, which it supports for sure. Other types of HTTP requests may or may not work. The URL-based rules in `/etc/httpd.conf` may need a different configuration to support other HTTP requests as well.
+For now, the installation resulting from `setup.sh` has only been tested with `GET` requests, which it supports for sure. Other types of HTTP requests may or may not work (e.g. the "user login" feature). The URL-based rules in `/etc/httpd.conf` (`location ...`) may need a different configuration to support HTTP requests other than `GET`.
 
 ### Other info
 
@@ -35,9 +34,9 @@ Since the testing process is manual I may overlook some edge cases, sometimes on
 
 In the following list, `$webdir` and `$p9pdir` respectively refer to `httpd`'s web content directory, by default `/var/www`, and plan9port's installation directory with `$webdir` as root, by default `/plan9`.
 
-- **Do the files `/etc/httpd.conf.bk` and `/etc/fstab.bk` already exist in your machine's file system?** If so, `setup.sh` will overwrite them, consider renaming or removing them.
-- **Did you add or change files in `$webdir` which cannot be lost?** The setup script creates new files in `$webdir` which may overwrite existing ones while the unsetup script removes some directories which may delete those files. Consider moving important files out of `$webdir` or placing them in directories which will not be removed.
-- **Did you make a backup of your machine?** The setup script may fail to complete, for example due to a network error. This leads to an incomplete installation and neither running `setup.sh` again, nor running `unsetup.sh`, is going to repair it. Depending on which command(s) failed and the type of error, you may be able to manually repair the installation by yourself. However, this is not always the case and it's an error-prone procedure, so it's discouraged.
+- **Do the files `/etc/httpd.conf.bk` and `/etc/fstab.bk` already exist in your machine's file system?** If so, `setup.sh` will probably overwrite them, consider renaming or removing them.
+- **Did you add or change files in `$webdir` which cannot be lost?** The setup script creates new files in `$webdir` which may overwrite existing ones while the unsetup script removes some directories which may delete those files. Consider moving important files out of `$webdir`.
+- **Did you make a backup of your machine?** The setup script may fail to complete, for example due to a network error. This leads to an incomplete installation and neither running `setup.sh` again, nor running `unsetup.sh`, is going to repair it. (If it did, you're just lucky.) Depending on which command(s) failed and the type of error, you may be able to manually repair the installation by yourself. However, this is not always the case and it's an error-prone procedure, so it is not advised at all.
 
 ### Actual usage
 
@@ -48,52 +47,70 @@ The following procedure refers to the setup script (`setup.sh`). For the un-setu
 The procedure is as follows, written both in human-readable steps and as commands:
 
 1. Download the script from the latest tag.
-2. Verify the script's checksum (see [Checksums](#checksums)).
+2. Verify the script's checksum (see [checksums](#sha-256-checksums-v20)).
 3. Change the `domain` variable (and `webdir`, if necessary) at will.
 4. Set the execution permission bit of the script.
 5. Start the script as root.
 
 ```sh
-ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v1.2/setup.sh
+ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v2.0/setup.sh
 sha256 -q setup.sh
 vi setup.sh	# change domain and webdir
 chmod 744 setup.sh
 doas ./setup.sh
 ```
 
-The `setup.sh` script does not automatically start `httpd` and `slowcgi`. It behaves like that for two reasons: firstly you might want to make some final changes to your website before displaying it publicly and secondly you may have to reboot your system before starting the webserver if `/etc/fstab` has been changed by the script. The script should display a log message if you need to reboot (and/or `/etc/fstab` has been changed). The absence of such message in the log means that rebooting is not necessary. This does not apply to `unsetup.sh`.
+The setup script does not automatically start `httpd` and `slowcgi`. It behaves like that for two reasons: firstly, you might want to make some final changes to your website before displaying it publicly; secondly, if `/etc/fstab` has been changed by the script, you need to reboot your system before starting the webserver. The script should display a log message if you need to reboot (and/or `/etc/fstab` has been changed). The absence of such message in the log means that rebooting is not necessary. All this does not apply to `unsetup.sh`.
 
-### Running parts
+#### Running parts
 
-Instead of running the entire script, one might want to run just one or some parts to, for example, debug the script or run again a part which could not terminate successfully. To do so is as simple as passing the function names to the script as arguments. An example is shown below.
+Instead of running the entire script, one might want to run just one or some parts to, for example, debug the script or run again a part which could not terminate successfully. To do so is as simple as passing the part names to the script as arguments. An example is shown below.
 
 ```sh
 ./setup.sh preinst inst
 ```
 
-Although the example above uses `setup.sh`, `unsetup.sh` also behaves in this way.
+Although the line above uses `setup.sh`, `unsetup.sh` also behaves in this way.
+
+### Maintenance
+
+It is good practice to keep software up to date, both to receive new features and to patch existing vulnerabilities.
+
+When using Werc, 4 pieces of software need to be kept up to date:
+
+- OpenBSD's own HTTP and SlowCGI daemons (a.k.a. `httpd` and `slowcgi`)
+- Werc
+- plan9port
+
+Unless you're using OpenBSD's `-current` branch, `httpd` and `slowcgi` are usually updated on every system upgrade. They are pretty secure and minimalist so keeping them up to date is not essential. These programs are part of OpenBSD's source tree which contains the whole operating system, including its kernel, essential libraries, and all preinstalled utilities. All software in that source tree undergoes severe security audits, that's why they are so secure.
+
+On the other hand, it's important to keep Werc and plan9port up to date. To do so, run the following lines in the shell. They remove the existing Werc and plan9port installations, download their updated version, and install them again.
+
+```sh
+doas ./unsetup.sh uninst rm9env
+doas ./setup.sh inst mk9env
+```
 
 ## Troubleshooting
 
-### Werc stops working after upgrading OpenBSD or updating plan9port
+### Werc stops working after upgrading OpenBSD
 
-It may happen that, after upgrading OpenBSD or updating the `plan9port` package, your website stops working and only shows "500 internal server error".
+It may happen that, after upgrading OpenBSD, your website stops working and only shows "500 internal server error".
 
-I don't know the reason, if I'm being honest. However, I found out that removing all the contents of the `plan9port` package from the webserver's directory and then placing them there again solves the error. Uninstalling and re-installing everything would work, although this solution is a waste of time, especially on slower machines, and could potentially have some side effects (it is not guaranteed not to have them).
+While the exact reason behind this behavior should be carefully analyzed and understood, you might try uninstalling and re-installing Werc and plan9port. The procedure is the same as if you were to update them.
 
-The proper way to solve this issue is by using the following commands.
-
-```
-doas ./unsetup.sh rm9env
-doas ./setup.sh mk9env
+```sh
+doas ./unsetup.sh uninst rm9env
+doas ./setup.sh inst mk9env
 ```
 
-## Checksums (v1.3)
+## SHA-256 checksums (v2.0)
 
-`setup.sh` SHA-256: ``
-
-`unsetup.sh` SHA-256: ``
+```
+0eb42f6f27a32fa15b61616279d3d474779ea83e62d5477e66d25b8170d27d58  setup.sh
+18f74da2537dc4dcc97c3fc6d4439faf6340f068309d9110a5dc098b899c3e50  unsetup.sh
+```
 
 ## License
 
-Starting from [v1.3](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v1.3) the project is now licensed under the ISC license, instead of Creative Commons Zero. Most things don't change, except for giving users and contributors more rights.
+Starting from [v2.0](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v2.0) the project is now licensed under the ISC license, instead of Creative Commons Zero. Most things don't change, except for giving users and contributors more rights.
