@@ -44,7 +44,8 @@ preuninst() {
 
 rm9env() {
 	# remove hard links, copies, devices
-	rm -fr $webdir$p9pdir $webdir/{dev,tmp} $webdir/usr/{lib,libexec} $webdir/bin/{pwd,mv,rc,echo}
+	rm -fr $webdir$p9pdir $webdir/{dev,tmp} $webdir/usr/{lib,libexec} $webdir/bin
+	rmdir $webidr/usr ; :
 }
 
 uninst() {
