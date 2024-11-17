@@ -123,7 +123,7 @@ fstabconf() {
 		newline=$(echo "$oldline" | sed 's/nodev//;s/,,/,/')
 		oldfile=$(cat /etc/fstab)
 		echo "$oldfile" | sed "s!$oldline!$newline!" >/etc/fstab
-		echo "$0: /etc/fstab has been changed, reboot when script terminates to apply"
+		echo "$0: /etc/fstab changed, reboot required to apply"
 	fi
 }
 
