@@ -66,7 +66,7 @@ lncp() {
 
 # list shared objects dependencies of specified programs/libraries
 lsso() {
-	ldd "$@" | awk '{ print $7 }' | grep '^/' | sort | uniq
+	ldd "$@" | awk '{ print $7 }' | grep '^/.*\.so' | sort | uniq
 }
 
 # ---- end functions ----
@@ -163,6 +163,15 @@ mk9env() {
 	git clone https://github.com/9fans/plan9port $webdir$p9pdir || return 1
 	( cd $webdir$p9pdir ; ./INSTALL -r $p9pdir ) || return 1
 
+	# lncp libraries required by plan9port into the chroot environment
+	libs=$(lsso $(find $webdir$p9pdir -type f) 2>/dev/null)
+	for l in $libs
+	do
+		d=$(dirname $l)
+		mkdir -p $webdir/$d
+		lncp $l $webdir/$d
+	done
+
 	# all programs need to be in $webdir/bin and some are missing
 	rm -Rf $webdir/bin
 	mv $webdir$p9pdir/bin $webdir/bin
@@ -175,11 +184,6 @@ mk9env() {
 	# create /tmp with permissions accepted by werc
 	mkdir $webdir/tmp
 	chmod 1777 $webdir/tmp
-
-	# lncp required things into the chroot environment
-	mkdir -p $webdir/usr/{lib,libexec}
-	lncp /usr/lib/lib{m,util,pthread,c,z,expat}.so* $webdir/usr/lib
-	lncp /usr/libexec/ld.so $webdir/usr/libexec
 }
 
 services() {
