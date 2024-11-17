@@ -64,6 +64,11 @@ lncp() {
 	done
 }
 
+# list shared objects dependencies of specified programs/libraries
+lsso() {
+	ldd "$@" | awk '{ print $7 }' | grep '^/' | sort | uniq
+}
+
 # ---- end functions ----
 
 # ---- parts ----
