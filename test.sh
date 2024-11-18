@@ -30,4 +30,4 @@ unsetup() {
 	snapfs /var/www www.aft2
 }
 
-"$1"
+"$@"
