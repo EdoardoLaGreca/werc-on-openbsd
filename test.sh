@@ -15,13 +15,16 @@ then
 fi
 
 files="{,un}setup.sh"
-ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/main/$files
-sha256 $files
-sed -i "s/^domain='.*'$/domain='mysite.lol'/" $files
-grep 'mysite\.lol' $files
-chmod 744 $files
-snapfs /etc etc.bef
-snapfs /var/www www.bef
+
+init() {
+	ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/main/$files
+	sha256 $files
+	sed -i "s/^domain='.*'$/domain='mysite.lol'/" $files
+	grep 'mysite\.lol' $files
+	chmod 744 $files
+	snapfs /etc etc.bef
+	snapfs /var/www www.bef
+}
 
 setup() {
 	./setup.sh
