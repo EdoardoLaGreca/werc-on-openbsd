@@ -9,6 +9,11 @@ snapfs() {
 	du -a "$1" | awk '{ print $2 }' | sort >"$2"
 }
 
+if [ $(id -u) -ne 0 ]
+then
+	echo 'run as superuser' >&2
+fi
+
 files="{,un}setup.sh"
 ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/main/$files
 sha256 $files
@@ -19,13 +24,13 @@ snapfs /etc etc.bef
 snapfs /var/www www.bef
 
 setup() {
-	doas ./setup.sh
+	./setup.sh
 	snapfs /etc etc.aft1
 	snapfs /var/www www.aft1
 }
 
 unsetup() {
-	doas ./unsetup.sh
+	./unsetup.sh
 	snapfs /etc etc.aft2
 	snapfs /var/www www.aft2
 }
