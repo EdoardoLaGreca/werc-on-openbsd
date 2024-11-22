@@ -38,4 +38,9 @@ unsetup() {
 	snapfs /var/www www.aft2
 }
 
-"$@"
+test $# -eq 0 && echo 'no args' >&2
+for f
+do
+	$f
+done
+
