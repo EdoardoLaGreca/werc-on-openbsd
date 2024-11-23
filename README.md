@@ -5,7 +5,7 @@ Automate [Werc](http://werc.cat-v.org/) setup on [OpenBSD](https://www.openbsd.o
 
 ## Useful info
 
-Both the `setup.sh` and `unsetup.sh` scripts, in their latest available version ([v2.0](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v2.0)), have been successfully tested on the latest available OpenBSD stable release (7.6). Prior or later versions of OpenBSD may not work.
+Both the `setup.sh` and `unsetup.sh` scripts, in their latest available version ([v2.1](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v2.1)), have been successfully tested on the latest available OpenBSD stable release (7.6). Prior or later versions of OpenBSD may not work.
 
 **Performing an OpenBSD release upgrade (e.g. by using [sysupgrade(8)](https://man.openbsd.org/sysupgrade.8)) may break the current Werc installation.** It is advised to always test your Werc installation after performing either a system upgrade, a Werc update, or a plan9port update. If it stops working, head to [Troubleshooting](#troubleshooting).
 
@@ -53,7 +53,7 @@ The procedure is as follows, written both in human-readable steps and as command
 5. Start the script as root.
 
 ```sh
-ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v2.0/setup.sh
+ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v2.1/setup.sh
 sha256 -q setup.sh
 vi setup.sh	# change domain and webdir
 chmod 744 setup.sh
