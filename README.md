@@ -122,7 +122,7 @@ These checksums are calculated on the working tree of the latest release.
 
 ```
 setup.sh:
-	0eb42f6f27a32fa15b61616279d3d474779ea83e62d5477e66d25b8170d27d58
+	7a08ee3a8e824f9a54b9a471ef0ebc6fb7ee2a848f13a33264b42a3e9d8817da
 unsetup.sh:
 	18f74da2537dc4dcc97c3fc6d4439faf6340f068309d9110a5dc098b899c3e50
 ```
