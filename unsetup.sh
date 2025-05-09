@@ -44,12 +44,15 @@ preuninst() {
 
 rm9env() {
 	# remove hard links, copies, devices
-	rm -fr $webdir$p9pdir $webdir/{dev,tmp} $webdir/usr/{lib,libexec} $webdir/bin
+	rm -fR $webdir$p9pdir \
+		$webdir/{dev,tmp} \
+		$webdir/usr/{lib,libexec,X11R6/lib} \
+		$webdir/bin
 	rmdir $webdir/usr ; :
 }
 
 uninst() {
-	ls -1 $webdir/werc/ | grep -v '^sites$' | xargs -I {} rm -r $webdir/werc/{}
+	ls -1 $webdir/werc/ | grep -v '^sites$' | xargs -I {} rm -R $webdir/werc/{}
 }
 
 restore() {
