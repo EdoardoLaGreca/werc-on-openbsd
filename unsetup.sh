@@ -48,7 +48,9 @@ rm9env() {
 		$webdir/{dev,tmp} \
 		$webdir/usr/{lib,libexec,X11R6/lib} \
 		$webdir/bin
-	rmdir $webdir/usr ; :
+	rmdir $webdir/usr/X11R6
+	rmdir $webdir/usr
+	:
 }
 
 uninst() {
