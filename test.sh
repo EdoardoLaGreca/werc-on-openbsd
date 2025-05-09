@@ -12,6 +12,7 @@ snapfs() {
 if [ $(id -u) -ne 0 ]
 then
 	echo 'run as superuser' >&2
+	exit 1
 fi
 
 files="{,un}setup.sh"
