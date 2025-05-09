@@ -231,7 +231,8 @@ all() {
 
 	echo
 	echo "$0: setup completed!"
-	echo "$0: you may need to reboot (see prior messages); otherwise, you can start httpd and slowcgi"
+	echo "$0: you may need to reboot (see prior messages)."
+	echo "$0: httpd and slowcgi have not been started but are enabled."
 }
 
 # default values if unset or empty
