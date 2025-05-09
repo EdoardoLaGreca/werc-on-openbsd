@@ -139,8 +139,10 @@ all() {
 	fi
 
 	echo
-	echo "$0: the unsetup operation was successful"
-	echo "$0: the content of your site ($siteroot) has not been removed"
+	echo "$0: the unsetup operation was successful."
+	echo "$0: your site's content ($siteroot) has not been removed."
+	echo "$0: the werc directory ($webdir/werc) can be safely removed."
+	echo "$0: warning: your site's content is in the werc directory."
 }
 
 # default values if unset or empty
