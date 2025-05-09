@@ -52,7 +52,8 @@ rm9env() {
 }
 
 uninst() {
-	ls -1 $webdir/werc/ | grep -v '^sites$' | xargs -I {} rm -R $webdir/werc/{}
+	ls -1 $webdir/werc/ | grep -v '^sites$' | xargs -I % rm -R $webdir/werc/%
+	ls -1 $webdir/werc/sites | grep -v '^'$domain'$' | xargs -I % rm -R $webdir/werc/sites/%
 }
 
 restore() {
