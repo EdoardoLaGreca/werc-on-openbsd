@@ -159,7 +159,7 @@ inst() {
 # make the plan 9 environment in the new root
 mk9env() {
 	# install plan9port in $webdir
-	pkg_add git || return 1
+	pkg_add -U git || return 1
 	git clone https://github.com/9fans/plan9port $webdir$p9pdir || return 1
 	( cd $webdir$p9pdir ; ./INSTALL -r $p9pdir ) || return 1
 
