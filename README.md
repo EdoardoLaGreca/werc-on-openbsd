@@ -24,15 +24,15 @@ Since the testing process is manual I may overlook some edge cases, sometimes on
 
 ## Rationale
 
-See [rat.md](rat.md).
+See [doc/rat.md](doc/rat.md).
 
 ## Usage
 
-See [usage.md](usage.md).
+See [doc/usage.md](doc/usage.md).
 
 ## Testing
 
-See [testing.md](testing.md).
+See [doc/testing.md](doc/testing.md).
 
 ## Troubleshooting
 
