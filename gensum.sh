@@ -20,8 +20,8 @@ esac
 
 if [ "$sumcmd" = "error" ]
 then
-	echo '$0: error: unsupported operating system.
-	echo '$0: edit the script to add this operating system.
+	echo "$0: error: unsupported operating system."
+	echo "$0: edit the script to add this operating system."
 	exit 1
 fi
 
