@@ -19,14 +19,15 @@ The following procedure refers to the setup script (`setup.sh`). For the un-setu
 The procedure is as follows, written both in human-readable steps and as commands:
 
 1. Download the script from the latest tag.
-2. Verify the script's checksum (see [Checksums section](/README.md#checksums) in README.md).
+2. Download and verify the script's checksum (see [Checksums section](/README.md#checksums) in README.md).
 3. Change the `domain` variable (and `webdir`, if necessary) at will.
 4. Set the execution permission bit of the script.
 5. Start the script as root.
 
 ```sh
 ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v2.2/setup.sh
-sha256 -q setup.sh
+ftp -o - https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v2.2/setup.sh.sum
+sha256 -q setup.sh	# is it the same?
 vi setup.sh	# change domain and webdir
 chmod 744 setup.sh
 doas ./setup.sh
