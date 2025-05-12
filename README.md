@@ -22,9 +22,9 @@ A [tagged commit](https://git-scm.com/book/en/v2/Git-Basics-Tagging) with tag na
 
 Since the testing process is manual I may overlook some edge cases, sometimes on purpose and sometimes not. I care about the quality of my software but testing every single line against all its possible edge cases is really time consuming and unsustainable.
 
-## Rationale and Details
+## Rationale
 
-(Moved to [rat.md](rat.md).)
+See [rat.md](rat.md).
 
 ## Usage
 
