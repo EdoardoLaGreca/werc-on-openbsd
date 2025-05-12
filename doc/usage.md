@@ -19,7 +19,7 @@ The following procedure refers to the setup script (`setup.sh`). For the un-setu
 The procedure is as follows, written both in human-readable steps and as commands:
 
 1. Download the script from the latest tag.
-2. Verify the script's checksum (see [Checksums](#checksums)).
+2. Verify the script's checksum (see [Checksums section](/README.md#checksums) in README.md).
 3. Change the `domain` variable (and `webdir`, if necessary) at will.
 4. Set the execution permission bit of the script.
 5. Start the script as root.
