@@ -47,7 +47,7 @@ The following procedure refers to the setup script (`setup.sh`). For the un-setu
 The procedure is as follows, written both in human-readable steps and as commands:
 
 1. Download the script from the latest tag.
-2. Verify the script's checksum (see [checksums](#sha-256-checksums)).
+2. Verify the script's checksum (see [Checksums](#checksums)).
 3. Change the `domain` variable (and `webdir`, if necessary) at will.
 4. Set the execution permission bit of the script.
 5. Start the script as root.
@@ -116,16 +116,9 @@ doas ./unsetup.sh uninst rm9env
 doas ./setup.sh inst mk9env
 ```
 
-## SHA-256 checksums
+## Checksums
 
-These checksums are calculated on the working tree of the latest release.
-
-```
-setup.sh:
-	7a08ee3a8e824f9a54b9a471ef0ebc6fb7ee2a848f13a33264b42a3e9d8817da
-unsetup.sh:
-	18f74da2537dc4dcc97c3fc6d4439faf6340f068309d9110a5dc098b899c3e50
-```
+Look for files ending in ".sum".
 
 ## License
 
