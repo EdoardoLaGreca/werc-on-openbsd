@@ -25,7 +25,7 @@ The procedure is as follows, written both in human-readable steps and as command
 5. Start the script as root.
 
 ```sh
-ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v2.1/setup.sh
+ftp https://raw.githubusercontent.com/EdoardoLaGreca/werc-on-openbsd/v2.2/setup.sh
 sha256 -q setup.sh
 vi setup.sh	# change domain and webdir
 chmod 744 setup.sh
