@@ -122,4 +122,5 @@ Look for files ending in ".sum".
 
 ## License
 
-Starting from [v2.0](https://github.com/EdoardoLaGreca/werc-on-openbsd/releases/tag/v2.0) the project is now licensed under the ISC license, instead of Creative Commons Zero. Most things don't change, except for giving users and contributors more rights.
+Everything in this repository is licensed under the [ISC license](https://en.wikipedia.org/wiki/ISC_license). See LICENSE file.
+
